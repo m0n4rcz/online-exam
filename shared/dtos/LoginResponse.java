@@ -81,4 +81,8 @@ public class LoginResponse implements Serializable {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public UserProfileDTO toUserProfileDTO() {
+        return new UserProfileDTO(username, displayName != null ? displayName : username, "", role != null ? role : "STUDENT", System.currentTimeMillis());
+    }
 }

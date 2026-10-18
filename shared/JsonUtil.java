@@ -162,6 +162,21 @@ public class JsonUtil {
         return Collections.emptyList();
     }
 
+    public static <T> List<T> fromJsonList(String json, Class<T> itemClass) {
+        List<Object> rawList = parseList(json);
+        List<T> result = new ArrayList<>();
+        for (Object item : rawList) {
+            if (item instanceof Map<?, ?> map) {
+                @SuppressWarnings("unchecked")
+                T obj = mapToPojo((Map<String, Object>) map, itemClass);
+                result.add(obj);
+            } else if (itemClass.isInstance(item)) {
+                result.add(itemClass.cast(item));
+            }
+        }
+        return result;
+    }
+
     public static Object parse(String json) {
         if (json == null) return null;
         json = json.trim();

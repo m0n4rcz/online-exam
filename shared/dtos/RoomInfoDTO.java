@@ -53,6 +53,7 @@ public class RoomInfoDTO implements Serializable {
     public void setRoomCode(String roomCode) { this.roomCode = roomCode; }
 
     public String getRoomName() { return roomName; }
+    public String getTitle() { return roomName; }
     public void setRoomName(String roomName) { this.roomName = roomName; }
 
     public String getHostUsername() { return hostUsername; }

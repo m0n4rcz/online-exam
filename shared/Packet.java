@@ -99,6 +99,13 @@ public class Packet {
         return JsonUtil.fromJson(getPayloadAsString(), clazz);
     }
 
+    /**
+     * Deserializes the JSON payload into a List of the requested DTO class.
+     */
+    public <T> java.util.List<T> getPayloadAsList(Class<T> clazz) {
+        return JsonUtil.fromJsonList(getPayloadAsString(), clazz);
+    }
+
     public int getMagic() { return magic; }
     public void setMagic(int magic) { this.magic = magic; }
 

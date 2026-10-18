@@ -47,20 +47,26 @@ public class RoomIntegrationTest {
         serverThread.setDaemon(true);
         serverThread.start();
 
-        try {
-            Thread.sleep(600);
-        } catch (InterruptedException ignored) {}
-
         Socket hostSocket = null;
         Socket studentSocket = null;
 
+        for (int i = 0; i < 10; i++) {
+            try {
+                Thread.sleep(300);
+                if (hostSocket == null) hostSocket = new Socket("127.0.0.1", TEST_PORT);
+                if (studentSocket == null) studentSocket = new Socket("127.0.0.1", TEST_PORT);
+                break;
+            } catch (Exception ignored) {}
+        }
+        if (hostSocket == null || studentSocket == null) {
+            throw new RuntimeException("Could not connect host or student to server on port " + TEST_PORT);
+        }
+
         try {
-            hostSocket = new Socket("127.0.0.1", TEST_PORT);
             hostSocket.setTcpNoDelay(true);
             InputStream hostIn = hostSocket.getInputStream();
             OutputStream hostOut = new BufferedOutputStream(hostSocket.getOutputStream());
 
-            studentSocket = new Socket("127.0.0.1", TEST_PORT);
             studentSocket.setTcpNoDelay(true);
             InputStream studentIn = studentSocket.getInputStream();
             OutputStream studentOut = new BufferedOutputStream(studentSocket.getOutputStream());

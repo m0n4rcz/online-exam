@@ -48,13 +48,19 @@ public class ServerIntegrationTest {
         serverThread.setDaemon(true);
         serverThread.start();
 
-        // Wait a moment for server to bind
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
+        // 2. Connect live Client Socket (with retry loop for server binding)
+        Socket clientSocket = null;
+        for (int i = 0; i < 10; i++) {
+            try {
+                Thread.sleep(300);
+                clientSocket = new Socket("127.0.0.1", TEST_PORT);
+                break;
+            } catch (Exception ignored) {}
+        }
+        if (clientSocket == null) throw new RuntimeException("Could not connect to server on port " + TEST_PORT);
 
-        // 2. Connect live Client Socket
-        try (Socket clientSocket = new Socket("127.0.0.1", TEST_PORT)) {
+        final Socket socketToUse = clientSocket;
+        try (socketToUse) {
             clientSocket.setTcpNoDelay(true);
             InputStream in = clientSocket.getInputStream();
             OutputStream out = new BufferedOutputStream(clientSocket.getOutputStream());
