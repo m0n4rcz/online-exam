@@ -8,19 +8,20 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * Modern stylized button with smooth hover animation, rounded corners,
- * and high-contrast academic typography.
+ * Modern stylized button with smooth hover feedback, rounded corners,
+ * and high-contrast HUST Red & Academic Gold aesthetic.
  */
 public class ModernButton extends JButton {
 
     public enum Style {
-        PRIMARY,
-        SECONDARY,
-        SUCCESS,
-        WARNING,
-        DANGER,
-        OUTLINE,
-        HUST
+        PRIMARY,      // HUST Crimson Red
+        SECONDARY,    // Clean Slate with Gold accent
+        HUST,         // HUST Crimson Red
+        HUST_GOLD,    // HUST Academic Gold
+        SUCCESS,      // Emerald Green
+        WARNING,      // Amber Warning
+        DANGER,       // Rose Red
+        OUTLINE       // Sleek subtle border
     }
 
     private Style style;
@@ -111,13 +112,22 @@ public class ModernButton extends JButton {
             fg = Theme.TEXT_MUTED;
         } else {
             bg = switch (style) {
-                case PRIMARY -> isPressed ? Theme.PRIMARY_HOVER.darker() : (isHovered ? Theme.PRIMARY_HOVER : Theme.PRIMARY);
-                case SECONDARY -> isPressed ? Theme.SECONDARY_HOVER.darker() : (isHovered ? Theme.SECONDARY_HOVER : Theme.SECONDARY);
+                case PRIMARY, HUST -> isPressed ? Theme.HUST_RED_DARK : (isHovered ? Theme.HUST_RED_HOVER : Theme.HUST_RED);
+                case HUST_GOLD -> {
+                    fg = new Color(15, 23, 42); // Crisp dark contrast on gold
+                    yield isPressed ? Theme.HUST_GOLD_DARK : (isHovered ? Theme.HUST_GOLD_HOVER : Theme.HUST_GOLD);
+                }
+                case SECONDARY -> {
+                    fg = isHovered ? Theme.HUST_GOLD : Theme.TEXT_PRIMARY;
+                    yield isHovered ? Theme.BG_CARD_HOVER : Theme.BG_SURFACE;
+                }
                 case SUCCESS -> isPressed ? Theme.SUCCESS_HOVER.darker() : (isHovered ? Theme.SUCCESS_HOVER : Theme.SUCCESS);
-                case WARNING -> isHovered ? Theme.WARNING.brighter() : Theme.WARNING;
+                case WARNING -> isHovered ? Theme.HUST_GOLD_HOVER : Theme.HUST_GOLD;
                 case DANGER -> isPressed ? Theme.DANGER_HOVER.darker() : (isHovered ? Theme.DANGER_HOVER : Theme.DANGER);
-                case HUST -> isHovered ? new Color(225, 29, 36) : Theme.HUST_RED;
-                case OUTLINE -> isHovered ? Theme.BG_CARD_HOVER : Theme.BG_SURFACE;
+                case OUTLINE -> {
+                    fg = isHovered ? Theme.HUST_GOLD : Theme.TEXT_PRIMARY;
+                    yield isHovered ? new Color(245, 158, 11, 20) : Theme.BG_SURFACE;
+                }
             };
         }
 
@@ -125,10 +135,14 @@ public class ModernButton extends JButton {
         g2.setColor(bg);
         g2.fillRoundRect(0, 0, w, h, cornerRadius, cornerRadius);
 
-        // Border for outline style
+        // Border for outline or secondary styles
         if (style == Style.OUTLINE && isEnabled()) {
-            g2.setColor(isHovered ? Theme.PRIMARY : Theme.BORDER);
+            g2.setColor(isHovered ? Theme.HUST_GOLD : Theme.BORDER);
             g2.setStroke(new BasicStroke(1.5f));
+            g2.drawRoundRect(1, 1, w - 2, h - 2, cornerRadius, cornerRadius);
+        } else if (style == Style.SECONDARY && isEnabled()) {
+            g2.setColor(isHovered ? Theme.HUST_GOLD : Theme.BORDER);
+            g2.setStroke(new BasicStroke(1.0f));
             g2.drawRoundRect(1, 1, w - 2, h - 2, cornerRadius, cornerRadius);
         }
 

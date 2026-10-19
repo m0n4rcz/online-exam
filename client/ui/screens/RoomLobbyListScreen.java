@@ -117,13 +117,16 @@ public class RoomLobbyListScreen extends JPanel {
                 String display;
 
                 if (RoomStatus.NOT_STARTED.equalsIgnoreCase(status)) {
-                    bg = Theme.SUCCESS;
+                    bg = Theme.HUST_GOLD;
+                    fg = new Color(15, 23, 42);
                     display = "CHỜ BẮT ĐẦU";
                 } else if (RoomStatus.ONGOING.equalsIgnoreCase(status)) {
-                    bg = Theme.WARNING;
+                    bg = Theme.HUST_RED;
+                    fg = Color.WHITE;
                     display = "ĐANG THI";
                 } else {
-                    bg = Theme.TEXT_MUTED;
+                    bg = Theme.BORDER;
+                    fg = Theme.TEXT_MUTED;
                     display = "ĐÃ KẾT THÚC";
                 }
 
@@ -154,7 +157,7 @@ public class RoomLobbyListScreen extends JPanel {
         btnViewResults.setPreferredSize(new Dimension(170, 38));
         btnViewResults.addActionListener(e -> viewSelectedRoomResults());
 
-        btnJoin = new ModernButton("Vào Phòng Thi", ModernButton.Style.SUCCESS);
+        btnJoin = new ModernButton("Vào Phòng Thi", ModernButton.Style.HUST_GOLD);
         btnJoin.setPreferredSize(new Dimension(150, 38));
         btnJoin.addActionListener(e -> joinSelectedRoom());
 

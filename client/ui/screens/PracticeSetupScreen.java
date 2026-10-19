@@ -60,7 +60,7 @@ public class PracticeSetupScreen extends JPanel {
 
         JPanel pnlBadge = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         pnlBadge.setOpaque(false);
-        pnlBadge.add(Theme.createBadge("LUYỆN TẬP ĐỘC LẬP - HUST", Theme.PRIMARY, Color.WHITE));
+        pnlBadge.add(Theme.createBadge("LUYỆN TẬP ĐỘC LẬP - HUST", Theme.HUST_RED, Color.WHITE));
 
         JLabel lblTitle = new JLabel("CẤU HÌNH BÀI THI TỰ LUYỆN", SwingConstants.CENTER);
         lblTitle.setFont(Theme.FONT_TITLE);
@@ -87,7 +87,7 @@ public class PracticeSetupScreen extends JPanel {
         // Quick Preset Chips
         JLabel lblPreset = new JLabel("Gợi ý cấu hình nhanh:");
         lblPreset.setFont(Theme.FONT_BADGE);
-        lblPreset.setForeground(Theme.TEXT_MUTED);
+        lblPreset.setForeground(Theme.TEXT_GOLD);
 
         JPanel pnlPresets = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         pnlPresets.setOpaque(false);
@@ -202,11 +202,11 @@ public class PracticeSetupScreen extends JPanel {
     private JButton createPresetChip(String text, int questions, int minutes) {
         JButton btn = new JButton(text);
         btn.setFont(Theme.FONT_SMALL);
-        btn.setForeground(Theme.TEXT_SECONDARY);
-        btn.setBackground(Theme.BG_INPUT);
+        btn.setForeground(Theme.TEXT_GOLD);
+        btn.setBackground(Theme.BG_CARD);
         btn.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Theme.BORDER, 1),
-                new EmptyBorder(5, 10, 5, 10)
+                new EmptyBorder(6, 12, 6, 12)
         ));
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));

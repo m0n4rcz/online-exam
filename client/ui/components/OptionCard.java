@@ -10,8 +10,8 @@ import java.awt.event.MouseEvent;
 
 /**
  * Interactive Multiple-Choice Option Card for Examination Screens.
- * Replaces traditional radio buttons with large, comfortable, clickable cards
- * supporting hover transitions, selected states, and keyboard shortcut triggers.
+ * Styled with HUST Crimson Red and Academic Gold identity for clean,
+ * distraction-free, and high-accessibility student exams.
  */
 public class OptionCard extends JPanel {
 
@@ -27,11 +27,11 @@ public class OptionCard extends JPanel {
     public OptionCard(String optionKey) {
         this.optionKey = optionKey;
 
-        setLayout(new BorderLayout(14, 0));
+        setLayout(new BorderLayout(16, 0));
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        setBorder(new EmptyBorder(12, 16, 12, 16));
-        setPreferredSize(new Dimension(500, 56));
+        setBorder(new EmptyBorder(12, 18, 12, 18));
+        setPreferredSize(new Dimension(520, 58));
 
         // 1. Left Option Letter Badge (A, B, C, D)
         lblBadge = new JLabel(optionKey, SwingConstants.CENTER) {
@@ -41,30 +41,32 @@ public class OptionCard extends JPanel {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 Color badgeBg;
+                Color badgeBorder;
+
                 if (isSelected) {
-                    badgeBg = Theme.PRIMARY;
+                    badgeBg = Theme.HUST_GOLD;
+                    badgeBorder = Theme.HUST_GOLD_HOVER;
                 } else if (isHovered) {
                     badgeBg = Theme.BG_CARD_HOVER;
+                    badgeBorder = Theme.HUST_GOLD;
                 } else {
-                    badgeBg = Theme.BG_SURFACE;
+                    badgeBg = Theme.BG_INPUT;
+                    badgeBorder = Theme.BORDER;
                 }
 
                 g2.setColor(badgeBg);
                 g2.fillOval(0, 0, getWidth(), getHeight());
 
-                if (!isSelected) {
-                    g2.setColor(isHovered ? Theme.PRIMARY : Theme.BORDER);
-                    g2.setStroke(new BasicStroke(1.2f));
-                    g2.drawOval(0, 0, getWidth() - 1, getHeight() - 1);
-                }
+                g2.setColor(badgeBorder);
+                g2.setStroke(new BasicStroke(isSelected ? 2.0f : 1.2f));
+                g2.drawOval(0, 0, getWidth() - 1, getHeight() - 1);
 
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        lblBadge.setPreferredSize(new Dimension(34, 34));
-        lblBadge.setFont(new Font(Theme.FONT_FAMILY, Font.BOLD, 14));
-        lblBadge.setForeground(Theme.TEXT_PRIMARY);
+        lblBadge.setPreferredSize(new Dimension(36, 36));
+        lblBadge.setFont(new Font(Theme.FONT_FAMILY, Font.BOLD, 15));
         lblBadge.setOpaque(false);
 
         // 2. Right Option Text
@@ -80,15 +82,15 @@ public class OptionCard extends JPanel {
             @Override
             public void mouseEntered(MouseEvent e) {
                 isHovered = true;
+                updateBadgeForeground();
                 repaint();
-                lblBadge.repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 isHovered = false;
+                updateBadgeForeground();
                 repaint();
-                lblBadge.repaint();
             }
 
             @Override
@@ -96,11 +98,24 @@ public class OptionCard extends JPanel {
                 select();
             }
         });
+
+        updateBadgeForeground();
+    }
+
+    private void updateBadgeForeground() {
+        if (isSelected) {
+            lblBadge.setForeground(new Color(15, 23, 42)); // High contrast dark text on gold badge
+        } else if (isHovered) {
+            lblBadge.setForeground(Theme.HUST_GOLD);
+        } else {
+            lblBadge.setForeground(Theme.TEXT_PRIMARY);
+        }
+        lblBadge.repaint();
     }
 
     public void setOptionText(String text) {
         this.optionText = text != null ? text : "";
-        lblText.setText("<html><body style='width: 520px; font-family: Segoe UI; font-size: 11pt; color: #F8FAFC;'>" 
+        lblText.setText("<html><body style='width: 530px; font-family: Segoe UI; font-size: 11pt; color: #FFFFFF; line-height: 1.35;'>"
                 + this.optionText + "</body></html>");
         repaint();
     }
@@ -115,8 +130,8 @@ public class OptionCard extends JPanel {
 
     public void setSelected(boolean selected) {
         this.isSelected = selected;
+        updateBadgeForeground();
         repaint();
-        lblBadge.repaint();
     }
 
     public void setOnSelectListener(Runnable listener) {
@@ -143,7 +158,7 @@ public class OptionCard extends JPanel {
         // Background
         Color bg;
         if (isSelected) {
-            bg = new Color(79, 70, 229, 38); // Subtle Indigo tint
+            bg = Theme.HUST_RED_TINT; // Subtle warm crimson tint
         } else if (isHovered) {
             bg = Theme.BG_CARD_HOVER;
         } else {
@@ -154,10 +169,10 @@ public class OptionCard extends JPanel {
 
         // Border
         if (isSelected) {
-            g2.setColor(Theme.PRIMARY);
-            g2.setStroke(new BasicStroke(2.0f));
+            g2.setColor(Theme.HUST_RED);
+            g2.setStroke(new BasicStroke(2.2f));
         } else if (isHovered) {
-            g2.setColor(Theme.PRIMARY_HOVER);
+            g2.setColor(Theme.HUST_GOLD);
             g2.setStroke(new BasicStroke(1.5f));
         } else {
             g2.setColor(Theme.BORDER);

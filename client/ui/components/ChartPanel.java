@@ -13,8 +13,8 @@ import java.util.Map;
 /**
  * Custom Java2D Graphical Chart Component.
  * Supports rendering:
- *   1. LINE CHART: Score progression trendline with gradient fill and grid
- *   2. BAR CHART: Topic / Category performance comparison
+ *   1. LINE CHART: Score progression trendline with HUST Red & Gold gradient fill and grid
+ *   2. BAR CHART: Topic / Category performance comparison with clean academic styling
  */
 public class ChartPanel extends ModernCard {
 
@@ -24,7 +24,7 @@ public class ChartPanel extends ModernCard {
     }
 
     private ChartType chartType = ChartType.LINE;
-    private String chartTitle = "Performance Analytics";
+    private String chartTitle = "Phân Tích Tiến Độ Học Tập";
     private List<ScoreTrendPointDTO> trendPoints = new ArrayList<>();
     private Map<String, Double> barData = null;
 
@@ -65,7 +65,7 @@ public class ChartPanel extends ModernCard {
 
         // Chart Header
         g2.setFont(Theme.FONT_SUBTITLE);
-        g2.setColor(Theme.TEXT_PRIMARY);
+        g2.setColor(Theme.TEXT_GOLD);
         g2.drawString(chartTitle, 20, 28);
 
         int paddingLeft = 50;
@@ -98,7 +98,7 @@ public class ChartPanel extends ModernCard {
         double[] yVals = {0.0, 2.5, 5.0, 7.5, 10.0};
         for (double v : yVals) {
             int y = y0 + h - (int) ((v / 10.0) * h);
-            g2.setColor(new Color(51, 65, 85, 90)); // Soft grid
+            g2.setColor(new Color(48, 56, 76, 120)); // Soft clean grid
             g2.drawLine(x0, y, x0 + w, y);
 
             g2.setColor(Theme.TEXT_MUTED);
@@ -109,7 +109,7 @@ public class ChartPanel extends ModernCard {
         if (trendPoints.isEmpty()) {
             g2.setColor(Theme.TEXT_MUTED);
             g2.setFont(Theme.FONT_BODY);
-            String empty = "No exam history recorded yet. Take a practice or room exam!";
+            String empty = "Chưa có dữ liệu lịch sử thi. Hãy tham gia tự luyện hoặc thi đấu!";
             int strW = g2.getFontMetrics().stringWidth(empty);
             g2.drawString(empty, x0 + (w - strW) / 2, y0 + h / 2);
             return;
@@ -126,7 +126,7 @@ public class ChartPanel extends ModernCard {
             ys[i] = y0 + h - (int) ((score / 10.0) * h);
         }
 
-        // Draw Gradient Fill beneath curve
+        // Draw Gradient Fill beneath curve (HUST Red to Gold)
         GeneralPath areaPath = new GeneralPath();
         areaPath.moveTo(xs[0], y0 + h);
         for (int i = 0; i < n; i++) {
@@ -136,14 +136,14 @@ public class ChartPanel extends ModernCard {
         areaPath.closePath();
 
         GradientPaint gp = new GradientPaint(
-                0, y0, new Color(99, 102, 241, 100),
-                0, y0 + h, new Color(99, 102, 241, 10)
+                0, y0, new Color(206, 24, 30, 85),
+                0, y0 + h, new Color(245, 158, 11, 10)
         );
         g2.setPaint(gp);
         g2.fill(areaPath);
 
-        // Draw Line
-        g2.setColor(Theme.PRIMARY);
+        // Draw Line (HUST Red)
+        g2.setColor(Theme.HUST_RED);
         g2.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         for (int i = 0; i < n - 1; i++) {
             g2.drawLine(xs[i], ys[i], xs[i + 1], ys[i + 1]);
@@ -151,20 +151,20 @@ public class ChartPanel extends ModernCard {
 
         // Draw Data dots and labels
         for (int i = 0; i < n; i++) {
-            // White center dot with indigo halo
-            g2.setColor(Theme.PRIMARY);
+            // Gold halo dot with white core
+            g2.setColor(Theme.HUST_GOLD);
             g2.fillOval(xs[i] - 5, ys[i] - 5, 10, 10);
             g2.setColor(Color.WHITE);
             g2.fillOval(xs[i] - 2, ys[i] - 2, 4, 4);
 
             // Score tag
-            g2.setColor(Theme.TEXT_PRIMARY);
+            g2.setColor(Theme.TEXT_GOLD);
             g2.setFont(Theme.FONT_BADGE);
             String scoreStr = String.format("%.1f", trendPoints.get(i).getScore());
             int tagW = g2.getFontMetrics().stringWidth(scoreStr);
             g2.drawString(scoreStr, xs[i] - tagW / 2, ys[i] - 8);
 
-            // X label (Test index or title)
+            // X label (Test index)
             g2.setColor(Theme.TEXT_MUTED);
             g2.setFont(Theme.FONT_SMALL);
             String xLbl = "#" + (i + 1);
@@ -177,7 +177,7 @@ public class ChartPanel extends ModernCard {
         if (barData == null || barData.isEmpty()) {
             g2.setColor(Theme.TEXT_MUTED);
             g2.setFont(Theme.FONT_BODY);
-            String empty = "No topic data available yet.";
+            String empty = "Chưa có dữ liệu thống kê chủ đề học phần.";
             int strW = g2.getFontMetrics().stringWidth(empty);
             g2.drawString(empty, x0 + (w - strW) / 2, y0 + h / 2);
             return;
@@ -204,15 +204,15 @@ public class ChartPanel extends ModernCard {
 
             // Filled bar with gradient
             int fillW = (int) ((pct / 100.0) * (w - 60));
-            Color c1 = pct >= 70 ? Theme.SUCCESS : (pct >= 50 ? Theme.PRIMARY : Theme.WARNING);
-            Color c2 = pct >= 70 ? Theme.SUCCESS_HOVER : Theme.PRIMARY_HOVER;
+            Color c1 = pct >= 75 ? Theme.SUCCESS : (pct >= 50 ? Theme.HUST_GOLD : Theme.HUST_RED);
+            Color c2 = pct >= 75 ? Theme.SUCCESS_HOVER : (pct >= 50 ? Theme.HUST_GOLD_HOVER : Theme.HUST_RED_HOVER);
 
             GradientPaint barGp = new GradientPaint(x0, currY, c1, x0 + fillW, currY, c2);
             g2.setPaint(barGp);
             g2.fillRoundRect(x0, currY, fillW, barHeight, 6, 6);
 
             // Percentage label
-            g2.setColor(Theme.TEXT_PRIMARY);
+            g2.setColor(Theme.TEXT_GOLD);
             g2.setFont(Theme.FONT_BADGE);
             String pctStr = String.format("%.0f%%", pct);
             g2.drawString(pctStr, x0 + w - 45, currY + barHeight - 4);

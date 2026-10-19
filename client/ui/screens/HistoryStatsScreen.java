@@ -64,9 +64,9 @@ public class HistoryStatsScreen extends JPanel {
 
         JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 4));
         pnlTitle.setOpaque(false);
-        JLabel lblHeading = new JLabel("LỊCH SỬ THI & PHÂN TÍCH TIẾN ĐỘ HỌC TẬP");
+        JLabel lblHeading = new JLabel("LỊCH SỬ THI & PHÂN TÍCH TIẾN ĐỘ HỌC TẬP - HUST");
         lblHeading.setFont(Theme.FONT_TITLE);
-        lblHeading.setForeground(Theme.TEXT_PRIMARY);
+        lblHeading.setForeground(Theme.TEXT_GOLD);
 
         JLabel lblSub = new JLabel("Theo dõi xu hướng điểm số và đánh giá mức độ thành thạo kiến thức theo từng chủ đề");
         lblSub.setFont(Theme.FONT_SMALL);
@@ -119,10 +119,10 @@ public class HistoryStatsScreen extends JPanel {
         JPanel pnlCards = new JPanel(new GridLayout(1, 4, 16, 0));
         pnlCards.setOpaque(false);
 
-        cardTotalTests = new StatCard("Tổng Số Bài Thi", "0", "Đã hoàn thành", Theme.PRIMARY);
-        cardAvgScore   = new StatCard("Điểm Trung Bình", "0.0", "Thang điểm 10", Theme.SUCCESS);
-        cardHighScore  = new StatCard("Điểm Cao Nhất", "0.0", "Kỷ lục cá nhân", Theme.WARNING);
-        cardAccuracy   = new StatCard("Độ Chính Xác Chung", "0%", "Tỉ lệ câu trả lời đúng", Theme.HUST_RED);
+        cardTotalTests = new StatCard("Tổng Số Bài Thi", "0", "Đã hoàn thành", Theme.HUST_RED);
+        cardAvgScore   = new StatCard("Điểm Trung Bình", "0.0", "Thang điểm 10", Theme.HUST_GOLD);
+        cardHighScore  = new StatCard("Điểm Cao Nhất", "0.0", "Kỷ lục cá nhân", Theme.HUST_GOLD_DARK);
+        cardAccuracy   = new StatCard("Độ Chính Xác Chung", "0%", "Tỉ lệ câu trả lời đúng", Theme.SUCCESS);
 
         pnlCards.add(cardTotalTests);
         pnlCards.add(cardAvgScore);

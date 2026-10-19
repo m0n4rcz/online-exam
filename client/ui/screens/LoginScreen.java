@@ -81,7 +81,7 @@ public class LoginScreen extends JPanel {
 
         JLabel lblTitle = new JLabel("HUST ONLINE EXAM PLATFORM", SwingConstants.CENTER);
         lblTitle.setFont(Theme.FONT_TITLE);
-        lblTitle.setForeground(Theme.TEXT_PRIMARY);
+        lblTitle.setForeground(Theme.TEXT_GOLD);
         lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         pnlHeader.add(lblTitle);
         pnlHeader.add(Box.createVerticalStrut(4));
@@ -127,8 +127,8 @@ public class LoginScreen extends JPanel {
         for (String[] p : presets) {
             JButton btnP = new JButton(p[2]);
             btnP.setFont(Theme.FONT_SMALL);
-            btnP.setForeground(Theme.TEXT_ACCENT);
-            btnP.setBackground(Theme.BG_CARD_HOVER);
+            btnP.setForeground(Theme.TEXT_GOLD);
+            btnP.setBackground(Theme.BG_CARD);
             btnP.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 1));
             btnP.setFocusPainted(false);
             btnP.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -217,7 +217,7 @@ public class LoginScreen extends JPanel {
         pnl.add(lblLoginError, gbc);
 
         gbc.gridy++;
-        btnLogin = new ModernButton("Đăng nhập Hệ thống", ModernButton.Style.PRIMARY);
+        btnLogin = new ModernButton("Đăng nhập Hệ thống", ModernButton.Style.HUST);
         btnLogin.setPreferredSize(new Dimension(200, 42));
         btnLogin.addActionListener(e -> doLogin());
         pnl.add(btnLogin, gbc);
@@ -287,7 +287,7 @@ public class LoginScreen extends JPanel {
         pnl.add(lblRegStatus, gbc);
 
         gbc.gridy++;
-        btnRegister = new ModernButton("Tạo Tài khoản Mới", ModernButton.Style.SUCCESS);
+        btnRegister = new ModernButton("Tạo Tài khoản Mới", ModernButton.Style.HUST_GOLD);
         btnRegister.setPreferredSize(new Dimension(200, 40));
         btnRegister.addActionListener(e -> doRegister());
         pnl.add(btnRegister, gbc);

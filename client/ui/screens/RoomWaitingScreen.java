@@ -121,8 +121,8 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
                 String val = value != null ? value.toString() : "";
                 boolean ready = "SẴN SÀNG".equalsIgnoreCase(val) || "READY".equalsIgnoreCase(val);
-                Color bg = ready ? Theme.SUCCESS : Theme.BORDER;
-                Color fg = ready ? Color.WHITE : Theme.TEXT_MUTED;
+                Color bg = ready ? Theme.HUST_GOLD : Theme.BORDER;
+                Color fg = ready ? new Color(15, 23, 42) : Theme.TEXT_MUTED;
                 String display = ready ? "SẴN SÀNG" : "CHƯA SẴN SÀNG";
                 return Theme.createBadge(display, bg, fg);
             }
@@ -140,7 +140,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
 
         JLabel lblChatTitle = new JLabel("KÊNH TRAO ĐỔI NỘI BỘ PHÒNG THI");
         lblChatTitle.setFont(Theme.FONT_SUBTITLE);
-        lblChatTitle.setForeground(Theme.TEXT_PRIMARY);
+        lblChatTitle.setForeground(Theme.TEXT_GOLD);
         pnlRight.add(lblChatTitle, BorderLayout.NORTH);
 
         txtChatArea = new JTextArea();
@@ -163,7 +163,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
         txtChatInput = new ModernTextField("Nhập tin nhắn gửi tới các thí sinh trong phòng...");
         txtChatInput.addActionListener(e -> sendChatMessage());
 
-        btnSendChat = new ModernButton("Gửi", ModernButton.Style.SECONDARY);
+        btnSendChat = new ModernButton("Gửi", ModernButton.Style.HUST);
         btnSendChat.setPreferredSize(new Dimension(80, 38));
         btnSendChat.addActionListener(e -> sendChatMessage());
 
@@ -250,7 +250,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
                     isReady = !isReady;
                     btnToggleReady.setText(isReady ? "Hủy Sẵn Sàng" : "Tôi Đã Sẵn Sàng");
                     if (isReady) {
-                        btnToggleReady.setStyle(ModernButton.Style.SUCCESS);
+                        btnToggleReady.setStyle(ModernButton.Style.HUST_GOLD);
                     } else {
                         btnToggleReady.setStyle(ModernButton.Style.OUTLINE);
                     }

@@ -66,7 +66,7 @@ public class AdminQuestionsScreen extends JPanel {
         pnlTitle.setOpaque(false);
         JLabel lblHeading = new JLabel("QUẢN TRỊ NGÂN HÀNG ĐỀ & NHẬT KÝ HỆ THỐNG - HUST");
         lblHeading.setFont(Theme.FONT_TITLE);
-        lblHeading.setForeground(Theme.TEXT_PRIMARY);
+        lblHeading.setForeground(Theme.TEXT_GOLD);
 
         JLabel lblSub = new JLabel("Quản lý danh mục câu hỏi phân loại theo chủ đề/độ khó và giám sát kiểm toán hệ thống");
         lblSub.setFont(Theme.FONT_SMALL);

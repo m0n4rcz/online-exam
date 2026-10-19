@@ -13,7 +13,7 @@ import java.awt.*;
 /**
  * High-impact modal dialog presenting exam score, rank, correct answers,
  * and detailed question-by-question explanation review.
- * Styled for HUST academic examination environment.
+ * Styled with HUST Red & Academic Gold visual identity.
  */
 public class ExamResultDialog extends JDialog {
 
@@ -37,17 +37,17 @@ public class ExamResultDialog extends JDialog {
         int total = result != null ? result.getTotalQuestions() : 0;
         double percent = total > 0 ? (correct * 100.0 / total) : 0.0;
 
-        Color scoreColor = score >= 8.5 ? Theme.SUCCESS : (score >= 7.0 ? Theme.PRIMARY : (score >= 5.0 ? Theme.WARNING : Theme.DANGER));
+        Color scoreColor = score >= 8.5 ? Theme.HUST_GOLD_HOVER : (score >= 7.0 ? Theme.HUST_GOLD : (score >= 5.0 ? Theme.SUCCESS : Theme.HUST_RED));
         String scoreRemark = score >= 8.5 ? "Xuất sắc / Giỏi" : (score >= 7.0 ? "Khá" : (score >= 5.0 ? "Đạt chuẩn" : "Chưa đạt"));
 
         // Header line
         JPanel pnlHeader = new JPanel(new BorderLayout());
         pnlHeader.setOpaque(false);
-        JLabel lblHeaderTitle = new JLabel("BÁO CÁO KẾT QUẢ BÀI THI CHÍNH THỨC");
+        JLabel lblHeaderTitle = new JLabel("BÁO CÁO KẾT QUẢ BÀI THI CHÍNH THỨC - HUST");
         lblHeaderTitle.setFont(Theme.FONT_BADGE);
-        lblHeaderTitle.setForeground(Theme.TEXT_MUTED);
+        lblHeaderTitle.setForeground(Theme.TEXT_GOLD);
 
-        JLabel lblTag = Theme.createBadge(isMultiplayer ? "PHÒNG THI ĐẤU" : "BÀI LUYỆN TẬP", Theme.PRIMARY, Color.WHITE);
+        JLabel lblTag = Theme.createBadge(isMultiplayer ? "PHÒNG THI ĐẤU" : "BÀI LUYỆN TẬP", Theme.HUST_RED, Color.WHITE);
         pnlHeader.add(lblHeaderTitle, BorderLayout.WEST);
         pnlHeader.add(lblTag, BorderLayout.EAST);
         bannerCard.add(pnlHeader, BorderLayout.NORTH);
@@ -107,8 +107,8 @@ public class ExamResultDialog extends JDialog {
             int rank = result != null ? result.getRank() : 1;
             JLabel lblR2 = new JLabel("#" + rank);
             lblR2.setFont(Theme.FONT_BIG_STAT);
-            lblR2.setForeground(rank == 1 ? Theme.WARNING : (rank <= 3 ? Theme.PRIMARY : Theme.TEXT_PRIMARY));
-            JLabel lblR3 = new JLabel(rank == 1 ? "Hạng nhất toàn phòng" : "Top thí sinh");
+            lblR2.setForeground(rank == 1 ? Theme.HUST_GOLD : (rank <= 3 ? Theme.HUST_GOLD_HOVER : Theme.TEXT_PRIMARY));
+            JLabel lblR3 = new JLabel(rank == 1 ? "Hạng nhất toàn phòng 🥇" : "Top thí sinh");
             lblR3.setFont(Theme.FONT_SMALL);
             lblR3.setForeground(Theme.TEXT_MUTED);
             pnlR.add(lblR1);
@@ -169,10 +169,10 @@ public class ExamResultDialog extends JDialog {
             statusColor = Theme.SUCCESS;
             statusText = "CHÍNH XÁC";
         } else if (isUnanswered) {
-            statusColor = Theme.WARNING;
+            statusColor = Theme.HUST_GOLD;
             statusText = "CHƯA TRẢ LỜI";
         } else {
-            statusColor = Theme.DANGER;
+            statusColor = Theme.HUST_RED;
             statusText = "CHƯA ĐÚNG";
         }
 
@@ -189,7 +189,7 @@ public class ExamResultDialog extends JDialog {
         card.add(pnlTop, BorderLayout.NORTH);
 
         // Question content
-        JLabel lblContent = new JLabel("<html><body style='width: 680px; line-height: 1.4; color: #E2E8F0;'>" + rev.getPrompt() + "</body></html>");
+        JLabel lblContent = new JLabel("<html><body style='width: 680px; line-height: 1.4; color: #FFFFFF; font-size: 11pt;'>" + rev.getPrompt() + "</body></html>");
         lblContent.setFont(Theme.FONT_BODY);
 
         // Answer comparison
@@ -206,7 +206,7 @@ public class ExamResultDialog extends JDialog {
         lblYourTitle.setForeground(Theme.TEXT_MUTED);
         JLabel lblYourVal = new JLabel(chosen);
         lblYourVal.setFont(Theme.FONT_BODY_BOLD);
-        lblYourVal.setForeground(isCorrect ? Theme.SUCCESS : (isUnanswered ? Theme.WARNING : Theme.DANGER));
+        lblYourVal.setForeground(isCorrect ? Theme.SUCCESS : (isUnanswered ? Theme.HUST_GOLD : Theme.HUST_RED));
         pnlYourAns.add(lblYourTitle, BorderLayout.WEST);
         pnlYourAns.add(lblYourVal, BorderLayout.CENTER);
 
@@ -224,19 +224,19 @@ public class ExamResultDialog extends JDialog {
         pnlAnswers.add(pnlYourAns);
         pnlAnswers.add(pnlCorrectAns);
 
-        // Explanation callout
+        // Explanation callout with HUST Gold accent border
         String expl = rev.getExplanation() != null && !rev.getExplanation().trim().isEmpty()
                 ? rev.getExplanation()
                 : "Không có lời giải thích kèm theo.";
 
         JPanel pnlExpl = new JPanel(new BorderLayout());
-        pnlExpl.setBackground(new Color(15, 23, 42)); // darker slate
+        pnlExpl.setBackground(Theme.BG_INPUT);
         pnlExpl.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 3, 0, 0, Theme.PRIMARY),
+                BorderFactory.createMatteBorder(0, 3, 0, 0, Theme.HUST_GOLD),
                 new EmptyBorder(8, 12, 8, 12)
         ));
-        JLabel lblExpl = new JLabel("<html><body style='width: 650px; line-height: 1.35; color: #94A3B8; font-size: 11px;'>"
-                + "<strong style='color: #CBD5E1;'>Lời giải chi tiết:</strong> " + expl + "</body></html>");
+        JLabel lblExpl = new JLabel("<html><body style='width: 650px; line-height: 1.35; color: #D1D5DB; font-size: 11px;'>"
+                + "<strong style='color: #FBBF24;'>Lời giải chi tiết:</strong> " + expl + "</body></html>");
         pnlExpl.add(lblExpl, BorderLayout.CENTER);
 
         JPanel pnlCenter = new JPanel();

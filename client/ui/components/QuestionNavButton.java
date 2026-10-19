@@ -8,6 +8,7 @@ import java.awt.*;
 /**
  * Palette button representing a single exam question in the navigation grid.
  * Displays number, indicates answered state, flagged state, and highlights currently viewed question.
+ * Styled with HUST Red & Academic Gold visual indicators.
  */
 public class QuestionNavButton extends JButton {
 
@@ -66,12 +67,17 @@ public class QuestionNavButton extends JButton {
 
         // Background color
         Color bg;
+        Color fg = Theme.TEXT_SECONDARY;
+
         if (isFlagged) {
-            bg = Theme.FLAGGED;
+            bg = Theme.HUST_GOLD;
+            fg = new Color(15, 23, 42); // Crisp dark text on gold button
         } else if (isAnswered) {
-            bg = Theme.PRIMARY;
+            bg = Theme.HUST_RED; // HUST Crimson for answered question
+            fg = Color.WHITE;
         } else {
-            bg = Theme.BG_SURFACE;
+            bg = Theme.BG_CARD;
+            fg = Theme.TEXT_MUTED;
         }
 
         g2.setColor(bg);
@@ -79,7 +85,7 @@ public class QuestionNavButton extends JButton {
 
         // Border highlighting current active question
         if (isCurrent) {
-            g2.setColor(Color.WHITE);
+            g2.setColor(Theme.HUST_GOLD_HOVER);
             g2.setStroke(new BasicStroke(2.2f));
             g2.drawRoundRect(2, 2, w - 5, h - 5, 8, 8);
         } else {
@@ -88,15 +94,17 @@ public class QuestionNavButton extends JButton {
             g2.drawRoundRect(2, 2, w - 5, h - 5, 8, 8);
         }
 
-        // Flag badge in top right corner if flagged
+        // Flag dot badge in top right corner if flagged
         if (isFlagged) {
-            g2.setColor(Theme.WARNING);
+            g2.setColor(new Color(15, 23, 42));
             g2.fillOval(w - 11, 4, 7, 7);
+            g2.setColor(Color.WHITE);
+            g2.fillOval(w - 10, 5, 5, 5);
         }
 
         g2.dispose();
 
-        setForeground(isAnswered || isFlagged ? Color.WHITE : Theme.TEXT_SECONDARY);
+        setForeground(fg);
         super.paintComponent(g);
     }
 }

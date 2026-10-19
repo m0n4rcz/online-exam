@@ -119,14 +119,14 @@ public class ExamScreen extends JPanel implements ServerEventListener {
         progressBar.setStringPainted(true);
         progressBar.setString("Tiến độ: 0% (0/0 câu)");
         progressBar.setFont(Theme.FONT_BADGE);
-        progressBar.setForeground(Theme.PRIMARY);
+        progressBar.setForeground(Theme.HUST_RED);
         progressBar.setBackground(Theme.BG_INPUT);
         progressBar.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 1));
         progressBar.setPreferredSize(new Dimension(280, 20));
 
         lblParticipantNotice = new JLabel("", SwingConstants.CENTER);
         lblParticipantNotice.setFont(Theme.FONT_BADGE);
-        lblParticipantNotice.setForeground(Theme.WARNING);
+        lblParticipantNotice.setForeground(Theme.HUST_GOLD);
 
         pnlCenterTop.add(progressBar);
         pnlCenterTop.add(lblParticipantNotice);
@@ -144,7 +144,7 @@ public class ExamScreen extends JPanel implements ServerEventListener {
 
         lblTimer = new JLabel("10:00", SwingConstants.CENTER);
         lblTimer.setFont(Theme.FONT_TIMER);
-        lblTimer.setForeground(Theme.SUCCESS);
+        lblTimer.setForeground(Theme.HUST_GOLD);
         lblTimer.setPreferredSize(new Dimension(110, 38));
         lblTimer.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Theme.BORDER, 1, true),
@@ -171,7 +171,7 @@ public class ExamScreen extends JPanel implements ServerEventListener {
 
         lblQuestionHeader = new JLabel("Câu hỏi số 1");
         lblQuestionHeader.setFont(Theme.FONT_SUBTITLE);
-        lblQuestionHeader.setForeground(Theme.PRIMARY_HOVER);
+        lblQuestionHeader.setForeground(Theme.HUST_GOLD);
 
         lblDifficultyBadge = Theme.createBadge("MỨC ĐỘ: TRUNG BÌNH", Theme.BG_SURFACE, Theme.TEXT_SECONDARY);
 
@@ -242,7 +242,7 @@ public class ExamScreen extends JPanel implements ServerEventListener {
 
         JLabel lblPalette = new JLabel("DANH SÁCH CÂU HỎI", SwingConstants.CENTER);
         lblPalette.setFont(Theme.FONT_HEADER);
-        lblPalette.setForeground(Theme.TEXT_PRIMARY);
+        lblPalette.setForeground(Theme.TEXT_GOLD);
 
         JLabel lblShortcutHint = new JLabel("Phím tắt: A, B, C, D | ← → chuyển câu", SwingConstants.CENTER);
         lblShortcutHint.setFont(Theme.FONT_SMALL);
@@ -266,7 +266,7 @@ public class ExamScreen extends JPanel implements ServerEventListener {
         pnlStats.setOpaque(false);
         lblStatAnswered = new JLabel("● Đã trả lời: 0 câu");
         lblStatAnswered.setFont(Theme.FONT_SMALL);
-        lblStatAnswered.setForeground(Theme.SUCCESS);
+        lblStatAnswered.setForeground(Theme.HUST_RED);
 
         lblStatRemaining = new JLabel("○ Chưa trả lời: 0 câu");
         lblStatRemaining.setFont(Theme.FONT_SMALL);
@@ -274,14 +274,14 @@ public class ExamScreen extends JPanel implements ServerEventListener {
 
         lblStatFlagged = new JLabel("⚑ Cần xem lại: 0 câu");
         lblStatFlagged.setFont(Theme.FONT_SMALL);
-        lblStatFlagged.setForeground(Theme.WARNING);
+        lblStatFlagged.setForeground(Theme.HUST_GOLD);
 
         pnlStats.add(lblStatAnswered);
         pnlStats.add(lblStatRemaining);
         pnlStats.add(lblStatFlagged);
         pnlSideBottom.add(pnlStats, BorderLayout.NORTH);
 
-        btnSubmit = new ModernButton("Nộp bài thi ngay", ModernButton.Style.SUCCESS);
+        btnSubmit = new ModernButton("Nộp bài thi ngay", ModernButton.Style.HUST);
         btnSubmit.setPreferredSize(new Dimension(240, 44));
         btnSubmit.addActionListener(e -> confirmAndSubmitExam());
         pnlSideBottom.add(btnSubmit, BorderLayout.SOUTH);
@@ -499,11 +499,11 @@ public class ExamScreen extends JPanel implements ServerEventListener {
         lblTimer.setText(String.format("%02d:%02d", m, s));
 
         if (remainingSeconds < 60) {
-            lblTimer.setForeground(Theme.DANGER);
+            lblTimer.setForeground(Theme.HUST_RED_HOVER);
         } else if (remainingSeconds < 180) {
-            lblTimer.setForeground(Theme.WARNING);
+            lblTimer.setForeground(Theme.HUST_GOLD_DARK);
         } else {
-            lblTimer.setForeground(Theme.SUCCESS);
+            lblTimer.setForeground(Theme.HUST_GOLD);
         }
     }
 
@@ -517,7 +517,7 @@ public class ExamScreen extends JPanel implements ServerEventListener {
         lblDifficultyBadge.setText(String.format("CHỦ ĐỀ: %s • MỨC ĐỘ: %s", q.getCategory(), q.getDifficulty()));
         lblMeta.setText(String.format("Chuyên đề: %s | Độ khó: %s", q.getCategory(), q.getDifficulty()));
 
-        lblQuestionContent.setText("<html><body style='width: 580px; font-family: Segoe UI; font-size: 11pt; color: #F8FAFC; line-height: 1.5;'>" 
+        lblQuestionContent.setText("<html><body style='width: 580px; font-family: Segoe UI; font-size: 11pt; color: #FFFFFF; line-height: 1.5;'>" 
                 + q.getContent() + "</body></html>");
 
         optA.setOptionText(q.getOptionA());
@@ -534,8 +534,8 @@ public class ExamScreen extends JPanel implements ServerEventListener {
 
         // Update Flag button state
         boolean isFlagged = flaggedQuestions.contains(q.getId());
-        btnFlag.setText(isFlagged ? "★ Đã đánh dấu xem lại" : "⚑ Đánh dấu xem lại (F)");
-        btnFlag.setForeground(isFlagged ? Theme.WARNING : Theme.TEXT_PRIMARY);
+        btnFlag.setText(isFlagged ? "★ Đã gắn cờ xem lại (F)" : "⚑ Đánh dấu xem lại (F)");
+        btnFlag.setStyle(isFlagged ? ModernButton.Style.HUST_GOLD : ModernButton.Style.OUTLINE);
 
         // Update palette buttons
         for (int i = 0; i < navButtons.size(); i++) {

@@ -19,6 +19,7 @@ import java.awt.*;
 /**
  * Main dashboard screen presenting student profile summary, academic KPIs,
  * and clear navigation to Practice, Multiplayer Rooms, Visual Analytics, and Leaderboards.
+ * Designed with HUST Red & Academic Gold visual identity.
  * Role-gated: Admin tools are strictly restricted to Teachers and Admins.
  */
 public class DashboardScreen extends JPanel {
@@ -62,24 +63,24 @@ public class DashboardScreen extends JPanel {
 
         pnlAvatarContainer = new JPanel(new BorderLayout());
         pnlAvatarContainer.setOpaque(false);
-        JLabel defaultAvatar = Theme.createAvatar("H", 42, Theme.PRIMARY);
+        JLabel defaultAvatar = Theme.createAvatar("H", 42, Theme.HUST_RED);
         pnlAvatarContainer.add(defaultAvatar, BorderLayout.CENTER);
 
         JPanel pnlNames = new JPanel(new GridLayout(2, 1, 0, 2));
         pnlNames.setOpaque(false);
 
-        JPanel pnlTitleRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        JPanel pnlTitleRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         pnlTitleRow.setOpaque(false);
 
         lblUserGreeting = new JLabel("Xin chào, Sinh viên Bách Khoa!");
         lblUserGreeting.setFont(Theme.FONT_TITLE);
         lblUserGreeting.setForeground(Theme.TEXT_PRIMARY);
 
-        lblUserBadge = Theme.createBadge("SINH VIÊN HUST", Theme.PRIMARY, Color.WHITE);
+        lblUserBadge = Theme.createBadge("SINH VIÊN HUST", Theme.HUST_RED, Color.WHITE);
         pnlTitleRow.add(lblUserGreeting);
         pnlTitleRow.add(lblUserBadge);
 
-        lblUserSub = new JLabel("Hệ thống Khảo thí & Luyện tập Trực tuyến HUST");
+        lblUserSub = new JLabel("Cổng Khảo Thí & Đánh Giá Năng Lực Trực Tuyến - Đại học Bách Khoa Hà Nội");
         lblUserSub.setFont(Theme.FONT_SMALL);
         lblUserSub.setForeground(Theme.TEXT_SECONDARY);
 
@@ -108,10 +109,10 @@ public class DashboardScreen extends JPanel {
         JPanel pnlKPIs = new JPanel(new GridLayout(1, 4, 16, 0));
         pnlKPIs.setOpaque(false);
 
-        cardTotalTests = new StatCard("Bài thi đã làm", "0", "Tổng số lần thi", Theme.PRIMARY);
-        cardAvgScore   = new StatCard("Điểm trung bình", "0.0", "Thang điểm 10.0", Theme.SUCCESS);
-        cardHighScore  = new StatCard("Kỷ lục điểm cao", "0.0", "Thành tích cao nhất", Theme.WARNING);
-        cardAccuracy   = new StatCard("Độ chính xác", "0%", "Tỷ lệ câu đúng", Theme.SECONDARY);
+        cardTotalTests = new StatCard("Bài thi đã làm", "0", "Tổng số lần thi", Theme.HUST_RED);
+        cardAvgScore   = new StatCard("Điểm trung bình", "0.0", "Thang điểm 10.0", Theme.HUST_GOLD);
+        cardHighScore  = new StatCard("Kỷ lục điểm cao", "0.0", "Thành tích cao nhất", Theme.HUST_GOLD_DARK);
+        cardAccuracy   = new StatCard("Độ chính xác", "0%", "Tỷ lệ câu đúng", Theme.SUCCESS);
 
         pnlKPIs.add(cardTotalTests);
         pnlKPIs.add(cardAvgScore);
@@ -127,36 +128,40 @@ public class DashboardScreen extends JPanel {
         // Card 1: Practice Mode
         pnlActionsGrid.add(createFeatureCard(
                 "LUYỆN TẬP CÁ NHÂN (PRACTICE)",
-                "Tự do tùy chọn chủ đề chuyên sâu (Mạng máy tính, Java Core, CSDL, HĐH), mức độ khó và thời gian để tự ôn luyện.",
+                "Tự do tùy chọn chủ đề chuyên sâu (Mạng máy tính, Java Core, CSDL, HĐH), mức độ khó và thời gian để tự rèn luyện kỹ năng.",
                 "Bắt đầu Ôn tập Ngay",
-                Theme.PRIMARY,
+                Theme.HUST_GOLD,
+                ModernButton.Style.HUST,
                 () -> app.showScreen("PRACTICE_SETUP")
         ));
 
         // Card 2: Test Rooms Lobby
         pnlActionsGrid.add(createFeatureCard(
                 "ĐẤU TRƯỜNG PHÒNG THI (ROOMS)",
-                "Tham gia phòng thi chung với lớp hoặc tự tạo phòng thi đấu. Đồng bộ thời gian thực, nộp bài sớm và bảng xếp hạng tức thì.",
+                "Tham gia phòng thi chung với các bạn cùng khóa hoặc tự tạo phòng thi đấu. Đồng bộ thời gian thực, bảng điểm tức thì.",
                 "Vào Sảnh Phòng Thi",
-                Theme.SECONDARY,
+                Theme.HUST_RED,
+                ModernButton.Style.HUST_GOLD,
                 () -> app.enterRoomLobby()
         ));
 
         // Card 3: Visual Analytics & History
         pnlActionsGrid.add(createFeatureCard(
                 "ĐỒ THỊ NĂNG LỰC & LỊCH SỬ",
-                "Theo dõi tiến độ học tập qua biểu đồ đường xu hướng điểm số, biểu đồ cột độ thuần thục từng chuyên môn và lịch sử bài làm.",
+                "Theo dõi tiến độ học tập qua biểu đồ xu hướng điểm số, phân tích mức độ thành thạo các chủ đề kiến thức và nhật ký làm bài.",
                 "Xem Biểu đồ Năng lực",
-                Theme.SUCCESS,
+                Theme.HUST_GOLD,
+                ModernButton.Style.SECONDARY,
                 () -> app.enterHistoryStats()
         ));
 
         // Card 4: Leaderboard
         pnlActionsGrid.add(createFeatureCard(
                 "BẢNG VÀNG THÀNH TÍCH (TOP HUST)",
-                "Vinh danh các sinh viên xuất sắc nhất toàn trường về điểm số và độ chuyên cần trên đấu trường trực tuyến.",
+                "Vinh danh các sinh viên xuất sắc nhất toàn trường về điểm số và độ chuyên cần trên đấu trường trực tuyến HUST.",
                 "Xem Bảng Vinh Danh",
-                Theme.WARNING,
+                Theme.HUST_GOLD,
+                ModernButton.Style.HUST,
                 () -> app.enterLeaderboard()
         ));
 
@@ -176,7 +181,7 @@ public class DashboardScreen extends JPanel {
         add(pnlBottom, BorderLayout.SOUTH);
     }
 
-    private ModernCard createFeatureCard(String title, String description, String buttonText, Color accentColor, Runnable action) {
+    private ModernCard createFeatureCard(String title, String description, String buttonText, Color accentColor, ModernButton.Style btnStyle, Runnable action) {
         ModernCard card = new ModernCard(new BorderLayout(0, 12));
         card.setBorder(new EmptyBorder(20, 20, 20, 20));
 
@@ -187,14 +192,14 @@ public class DashboardScreen extends JPanel {
         lblT.setFont(Theme.FONT_SUBTITLE);
         lblT.setForeground(accentColor);
 
-        JLabel lblD = new JLabel("<html><body style='width: 300px; color: #94A3B8; font-family: Segoe UI; font-size: 10pt; line-height: 1.4;'>" 
+        JLabel lblD = new JLabel("<html><body style='width: 320px; color: #D1D5DB; font-family: Segoe UI; font-size: 10pt; line-height: 1.45;'>"
                 + description + "</body></html>");
 
         pnlText.add(lblT);
         pnlText.add(lblD);
         card.add(pnlText, BorderLayout.CENTER);
 
-        ModernButton btn = new ModernButton(buttonText, ModernButton.Style.PRIMARY);
+        ModernButton btn = new ModernButton(buttonText, btnStyle);
         btn.setPreferredSize(new Dimension(200, 40));
         btn.addActionListener(e -> action.run());
 
@@ -211,7 +216,7 @@ public class DashboardScreen extends JPanel {
             lblUserGreeting.setText(String.format("Xin chào, %s!", user.getDisplayName()));
 
             pnlAvatarContainer.removeAll();
-            pnlAvatarContainer.add(Theme.createAvatar(user.getDisplayName(), 42, Theme.PRIMARY), BorderLayout.CENTER);
+            pnlAvatarContainer.add(Theme.createAvatar(user.getDisplayName(), 42, Theme.HUST_RED), BorderLayout.CENTER);
             pnlAvatarContainer.revalidate();
             pnlAvatarContainer.repaint();
 

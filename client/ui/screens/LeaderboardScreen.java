@@ -50,7 +50,7 @@ public class LeaderboardScreen extends JPanel {
         pnlTitle.setOpaque(false);
         JLabel lblHeading = new JLabel("BẢNG VÀNG THÀNH TÍCH HỌC TẬP - HUST");
         lblHeading.setFont(Theme.FONT_TITLE);
-        lblHeading.setForeground(Theme.TEXT_PRIMARY);
+        lblHeading.setForeground(Theme.TEXT_GOLD);
 
         JLabel lblSub = new JLabel("Vinh danh những sinh viên có kết quả học tập và rèn luyện xuất sắc nhất");
         lblSub.setFont(Theme.FONT_SMALL);
@@ -95,20 +95,23 @@ public class LeaderboardScreen extends JPanel {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
                 String val = value != null ? value.toString() : "";
                 Color bg;
+                Color fg = Color.WHITE;
                 String text = val;
                 if ("#1".equals(val) || val.contains("1")) {
-                    bg = new Color(217, 119, 6); // Gold Amber
+                    bg = Theme.HUST_GOLD;
+                    fg = new Color(15, 23, 42); // Bold dark contrast on gold
                     text = "🥇 Hạng 1";
                 } else if ("#2".equals(val) || val.contains("2")) {
-                    bg = new Color(100, 116, 139); // Silver
+                    bg = new Color(148, 163, 184); // Silver
                     text = "🥈 Hạng 2";
                 } else if ("#3".equals(val) || val.contains("3")) {
                     bg = new Color(180, 83, 9); // Bronze
                     text = "🥉 Hạng 3";
                 } else {
                     bg = Theme.BORDER;
+                    fg = Theme.TEXT_MUTED;
                 }
-                return Theme.createBadge(text, bg, Color.WHITE);
+                return Theme.createBadge(text, bg, fg);
             }
         });
 

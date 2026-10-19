@@ -10,7 +10,7 @@ import java.awt.event.FocusEvent;
 
 /**
  * Modern text input field featuring placeholder text, rounded corners,
- * active focus ring, and high-contrast typography for student test applications.
+ * active HUST Gold focus ring, and high-contrast typography for student test applications.
  */
 public class ModernTextField extends JTextField {
 
@@ -34,7 +34,7 @@ public class ModernTextField extends JTextField {
         setForeground(Theme.TEXT_PRIMARY);
         setCaretColor(Color.WHITE);
         setSelectedTextColor(Color.WHITE);
-        setSelectionColor(new Color(79, 70, 229, 180));
+        setSelectionColor(new Color(206, 24, 30, 180));
         setBorder(new EmptyBorder(8, 14, 8, 14));
         setPreferredSize(new Dimension(240, 40));
 
@@ -75,7 +75,7 @@ public class ModernTextField extends JTextField {
         g2.setColor(Theme.BG_INPUT);
         g2.fillRoundRect(0, 0, w, h, cornerRadius, cornerRadius);
 
-        // Border with focus ring
+        // Border with HUST Gold focus ring
         if (isError) {
             g2.setColor(Theme.DANGER);
             g2.setStroke(new BasicStroke(1.5f));
@@ -106,7 +106,7 @@ public class ModernTextField extends JTextField {
     }
 
     /**
-     * Specialized password field with identical styling.
+     * Specialized password field with identical styling and HUST focus ring.
      */
     public static class PasswordField extends JPasswordField {
         private String placeholder = "";
@@ -121,7 +121,7 @@ public class ModernTextField extends JTextField {
             setForeground(Theme.TEXT_PRIMARY);
             setCaretColor(Color.WHITE);
             setSelectedTextColor(Color.WHITE);
-            setSelectionColor(new Color(79, 70, 229, 180));
+            setSelectionColor(new Color(206, 24, 30, 180));
             setBorder(new EmptyBorder(8, 14, 8, 14));
             setPreferredSize(new Dimension(240, 40));
 
