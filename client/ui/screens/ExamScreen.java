@@ -76,6 +76,7 @@ public class ExamScreen extends JPanel implements ServerEventListener {
     private ModernButton btnFlag;
     private ModernButton btnSubmit;
     private ModernButton btnHostEnd;
+    private ModernButton btnExit;
 
     public ExamScreen(ClientApp app) {
         this.app = app;
@@ -90,9 +91,17 @@ public class ExamScreen extends JPanel implements ServerEventListener {
     }
 
     private void initUI() {
-        // 1. Top Bar: Title, Subject, Progress Bar, Timer, Host Controls
+        // 1. Top Bar: Title, Subject, Progress Bar, Timer, Host Controls, Exit Button
         ModernCard topCard = new ModernCard(new BorderLayout(16, 0));
         topCard.setBorder(new EmptyBorder(12, 20, 12, 20));
+
+        JPanel pnlTopLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 0));
+        pnlTopLeft.setOpaque(false);
+
+        btnExit = new ModernButton("← Thoát", ModernButton.Style.OUTLINE);
+        btnExit.setPreferredSize(new Dimension(100, 38));
+        btnExit.setToolTipText("Thoát khỏi bài thi / Rời phòng thi (Phím tắt: ESC)");
+        btnExit.addActionListener(e -> confirmAndExitExam());
 
         JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 4));
         pnlTitle.setOpaque(false);
@@ -107,7 +116,10 @@ public class ExamScreen extends JPanel implements ServerEventListener {
 
         pnlTitle.add(lblTitle);
         pnlTitle.add(lblMeta);
-        topCard.add(pnlTitle, BorderLayout.WEST);
+
+        pnlTopLeft.add(btnExit);
+        pnlTopLeft.add(pnlTitle);
+        topCard.add(pnlTopLeft, BorderLayout.WEST);
 
         // Center: Progress Bar & Multiplayer notice
         JPanel pnlCenterTop = new JPanel(new GridLayout(2, 1, 0, 4));
@@ -343,6 +355,11 @@ public class ExamScreen extends JPanel implements ServerEventListener {
         am.put("FLAG_QUESTION", new AbstractAction() {
             @Override public void actionPerformed(ActionEvent e) { toggleFlagCurrentQuestion(); }
         });
+
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EXIT_EXAM");
+        am.put("EXIT_EXAM", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) { confirmAndExitExam(); }
+        });
     }
 
     private void selectAnswer(String optionKey) {
@@ -421,6 +438,8 @@ public class ExamScreen extends JPanel implements ServerEventListener {
         this.flaggedQuestions.clear();
         this.isSubmitted = false;
 
+        btnExit.setText("← Thoát");
+        btnExit.setToolTipText("Thoát khỏi bài luyện tập và trở về Bảng điều khiển (ESC)");
         btnHostEnd.setVisible(false);
         lblTitle.setText(examTitle);
         lblParticipantNotice.setText("CHẾ ĐỘ TỰ LUYỆN TẬP (SOLO PRACTICE)");
@@ -439,6 +458,8 @@ public class ExamScreen extends JPanel implements ServerEventListener {
         this.flaggedQuestions.clear();
         this.isSubmitted = false;
 
+        btnExit.setText("← Rời phòng");
+        btnExit.setToolTipText("Rời khỏi phòng thi đấu trực tuyến (ESC)");
         btnHostEnd.setVisible(isHost);
         lblTitle.setText(examTitle);
         lblParticipantNotice.setText("PHÒNG THI ĐẤU TRỰC TUYẾN - MÁY CHỦ HUST");
@@ -448,6 +469,7 @@ public class ExamScreen extends JPanel implements ServerEventListener {
     }
 
     private void setupExamSession() {
+        btnExit.setEnabled(true);
         btnSubmit.setEnabled(true);
         btnSubmit.setText("Nộp bài thi ngay");
 
@@ -649,6 +671,57 @@ public class ExamScreen extends JPanel implements ServerEventListener {
         if (conf == JOptionPane.YES_OPTION) {
             client.sendPacket(Packet.ok(OpCodes.HOST_END_EXAM_REQ));
         }
+    }
+
+    // ==========================================
+    // SAFE EXAM EXIT & CANCELLATION (QoL)
+    // ==========================================
+
+    public void confirmAndExitExam() {
+        if (isSubmitted) {
+            exitExam();
+            return;
+        }
+
+        String msg;
+        String title;
+        if (isMultiplayer) {
+            msg = "CẢNH BÁO: Bạn đang tham gia phòng thi đấu trực tuyến (" + roomCode + ")!\n\n"
+                + "● Nếu bạn rời phòng thi lúc này, bạn sẽ bị tính là bỏ cuộc hoặc nộp bài sớm.\n"
+                + "● Điểm số hiện tại của bạn sẽ được chốt và bạn không thể tiếp tục thi phòng này.\n\n"
+                + "Bạn có chắc chắn muốn rời phòng thi không?";
+            title = "Xác nhận rời phòng thi";
+        } else {
+            msg = "BẠN ĐANG TRONG PHIÊN TỰ LUYỆN TẬP:\n\n"
+                + "● Tiến độ hiện tại: " + studentAnswers.size() + "/" + questions.size() + " câu đã trả lời.\n"
+                + "● Nếu thoát ngay bây giờ, kết quả bài làm này sẽ không được lưu vào lịch sử cá nhân.\n\n"
+                + "Bạn có chắc chắn muốn hủy và quay về Bảng điều khiển không?";
+            title = "Xác nhận thoát bài luyện tập";
+        }
+
+        int choice = JOptionPane.showConfirmDialog(this, msg, title,
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (choice == JOptionPane.YES_OPTION) {
+            exitExam();
+        }
+    }
+
+    private void exitExam() {
+        if (localTimer != null) {
+            localTimer.stop();
+        }
+        client.removeListener(this);
+
+        if (isMultiplayer && roomCode != null && !"PRACTICE".equalsIgnoreCase(roomCode)) {
+            // Notify server that student is leaving the room
+            try {
+                client.sendPacket(Packet.ok(OpCodes.LEAVE_ROOM_REQ));
+                client.setCurrentRoomCode(null);
+            } catch (Exception ignored) {}
+        }
+
+        app.showScreen("DASHBOARD");
     }
 
     private void showResultDialog(ExamResultDTO result) {

@@ -293,6 +293,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
         client.removeListener(this);
         client.sendPacket(Packet.ok(OpCodes.LEAVE_ROOM_REQ));
         client.setCurrentRoomCode(null);
+        txtChatArea.setText("");
         app.showScreen("ROOM_LOBBY");
     }
 

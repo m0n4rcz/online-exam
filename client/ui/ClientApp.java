@@ -151,6 +151,16 @@ public class ClientApp extends JFrame {
                 }
             } catch (Exception ignored) {}
 
+            // Set high-contrast dark theme defaults across UIManager
+            UIManager.put("TextField.background", Theme.BG_INPUT);
+            UIManager.put("TextField.foreground", Theme.TEXT_PRIMARY);
+            UIManager.put("TextField.caretForeground", Theme.HUST_GOLD);
+            UIManager.put("PasswordField.background", Theme.BG_INPUT);
+            UIManager.put("PasswordField.foreground", Theme.TEXT_PRIMARY);
+            UIManager.put("PasswordField.caretForeground", Theme.HUST_GOLD);
+            UIManager.put("TextArea.background", Theme.BG_SURFACE);
+            UIManager.put("TextArea.foreground", Theme.TEXT_PRIMARY);
+
             ClientApp app = new ClientApp();
             app.setVisible(true);
         });

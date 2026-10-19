@@ -4,6 +4,8 @@ import client.ui.Theme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicTextFieldUI;
+import javax.swing.plaf.basic.BasicPasswordFieldUI;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -28,11 +30,18 @@ public class ModernTextField extends JTextField {
         init();
     }
 
+    @Override
+    public void updateUI() {
+        setUI(new BasicTextFieldUI());
+    }
+
     private void init() {
+        setUI(new BasicTextFieldUI());
         setOpaque(false);
+        setBackground(Theme.BG_INPUT);
         setFont(Theme.FONT_BODY);
         setForeground(Theme.TEXT_PRIMARY);
-        setCaretColor(Color.WHITE);
+        setCaretColor(Theme.HUST_GOLD);
         setSelectedTextColor(Color.WHITE);
         setSelectionColor(new Color(206, 24, 30, 180));
         setBorder(new EmptyBorder(8, 14, 8, 14));
@@ -91,8 +100,8 @@ public class ModernTextField extends JTextField {
         g2.dispose();
         super.paintComponent(g);
 
-        // Placeholder text
-        if (getText().isEmpty() && !placeholder.isEmpty() && !isFocused) {
+        // Placeholder text - visible whenever text is empty
+        if (getText().isEmpty() && !placeholder.isEmpty()) {
             Graphics2D gPlaceholder = (Graphics2D) g.create();
             gPlaceholder.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             gPlaceholder.setFont(Theme.FONT_BODY);
@@ -116,10 +125,12 @@ public class ModernTextField extends JTextField {
 
         public PasswordField(String placeholder) {
             this.placeholder = placeholder;
+            setUI(new BasicPasswordFieldUI());
             setOpaque(false);
+            setBackground(Theme.BG_INPUT);
             setFont(Theme.FONT_BODY);
             setForeground(Theme.TEXT_PRIMARY);
-            setCaretColor(Color.WHITE);
+            setCaretColor(Theme.HUST_GOLD);
             setSelectedTextColor(Color.WHITE);
             setSelectionColor(new Color(206, 24, 30, 180));
             setBorder(new EmptyBorder(8, 14, 8, 14));
@@ -138,6 +149,11 @@ public class ModernTextField extends JTextField {
                     repaint();
                 }
             });
+        }
+
+        @Override
+        public void updateUI() {
+            setUI(new BasicPasswordFieldUI());
         }
 
         public void setError(boolean error) {
@@ -171,7 +187,7 @@ public class ModernTextField extends JTextField {
             g2.dispose();
             super.paintComponent(g);
 
-            if (getPassword().length == 0 && !placeholder.isEmpty() && !isFocused) {
+            if (getPassword().length == 0 && !placeholder.isEmpty()) {
                 Graphics2D gPlaceholder = (Graphics2D) g.create();
                 gPlaceholder.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
                 gPlaceholder.setFont(Theme.FONT_BODY);

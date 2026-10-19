@@ -23,6 +23,14 @@ public class ExamResultDialog extends JDialog {
         setLocationRelativeTo(parent);
         getContentPane().setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout(0, 16));
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                parent.showScreen("DASHBOARD");
+            }
+        });
 
         initUI(parent, result, examTitle, isMultiplayer);
     }

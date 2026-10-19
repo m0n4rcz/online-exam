@@ -292,6 +292,12 @@ public class LoginScreen extends JPanel {
         btnRegister.addActionListener(e -> doRegister());
         pnl.add(btnRegister, gbc);
 
+        // Enter key listeners for register inputs (QoL)
+        txtRegUser.addActionListener(e -> doRegister());
+        txtRegPass.addActionListener(e -> doRegister());
+        txtRegName.addActionListener(e -> doRegister());
+        txtRegEmail.addActionListener(e -> doRegister());
+
         return pnl;
     }
 
