@@ -8,7 +8,7 @@ if (-not (Test-Path "bin")) {
 
 Write-Host "Compiling source files..." -ForegroundColor Yellow
 $javaFiles = Get-ChildItem -Recurse -Filter *.java shared,server,client | ForEach-Object { $_.FullName }
-javac -cp ".;lib/*" -d bin $javaFiles
+javac -encoding UTF-8 -cp ".;lib/*" -d bin $javaFiles
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "Compilation successful. Launching ServerCore..." -ForegroundColor Green

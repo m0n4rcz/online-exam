@@ -7,7 +7,7 @@ if (-not (Test-Path "bin")) {
 }
 
 $javaFiles = Get-ChildItem -Recurse -Filter *.java shared,server,client | ForEach-Object { $_.FullName }
-javac -cp ".;lib/*" -d bin $javaFiles
+javac -encoding UTF-8 -cp ".;lib/*" -d bin $javaFiles
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "Launching ClientApp GUI..." -ForegroundColor Green
