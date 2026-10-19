@@ -6,6 +6,14 @@
 *.class
 *.ctxt
 
+# Compiled C object files and executables
+*.o
+*.obj
+server_c/server
+server_c/server.exe
+checkpoint_50_server_c/server_c/server
+checkpoint_50_server_c/server_c/server.exe
+
 # Build & Output Directories
 bin/
 out/
@@ -100,3 +108,23 @@ $RECYCLE.BIN/
 *.db-shm
 *.sqlite
 *.sqlite3
+
+# ==========================================
+# Secret materials / templates
+# ==========================================
+materials/
+
+# ==========================================
+# Presentations & Slide Scripts
+# ==========================================
+*.pptx
+generate_pptx.py
+
+# ==========================================
+# Client & Legacy Java Files (Server-side Only Repo)
+# ==========================================
+/client/
+/shared/
+/lib/
+/run-client.bat
+/run-client.ps1

@@ -1,20 +1,21 @@
 @echo off
-title Online Exam System - Server
+title HUST Online Exam Server (C / TCP Socket)
 echo ===================================================
-echo   STARTING ONLINE EXAM TCP SOCKET SERVER (PORT 8888)
+echo   STARTING HUST ONLINE EXAM C TCP SOCKET SERVER
 echo ===================================================
 
-if not exist "bin" mkdir bin
+cd server_c
 
-echo Compiling Java source files...
-javac -encoding UTF-8 -cp ".;lib/*" -d bin shared\*.java shared\dtos\*.java server\core\*.java server\db\*.java server\db\dao\*.java server\room\*.java client\*.java client\net\*.java client\ui\*.java client\ui\components\*.java client\ui\screens\*.java
-
-if %ERRORLEVEL% NEQ 0 (
-    echo Compilation failed with exit code %ERRORLEVEL%.
-    pause
-    exit /b %ERRORLEVEL%
+if not exist "server.exe" (
+    echo Compiling C source files with GCC...
+    gcc -O2 -Wall -Ilib -I. server.c codec.c db.c session.c room.c dispatcher.c sha256.c lib/cJSON.c lib/sqlite3.c -o server.exe -lws2_32
+    if %ERRORLEVEL% NEQ 0 (
+        echo Compilation failed with exit code %ERRORLEVEL%.
+        pause
+        exit /b %ERRORLEVEL%
+    )
 )
 
-echo Starting ServerCore...
-java -cp "bin;lib/*" server.core.ServerCore 8888
+echo Starting C Server on Port 8888...
+server.exe 8888 ../exam_system.db
 pause

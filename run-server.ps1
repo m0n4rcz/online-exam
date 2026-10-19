@@ -1,18 +1,19 @@
 Write-Host "===================================================" -ForegroundColor Cyan
-Write-Host "  STARTING ONLINE EXAM TCP SOCKET SERVER (PORT 8888)" -ForegroundColor Cyan
+Write-Host "  STARTING HUST ONLINE EXAM C TCP SOCKET SERVER" -ForegroundColor Cyan
 Write-Host "===================================================" -ForegroundColor Cyan
 
-if (-not (Test-Path "bin")) {
-    New-Item -ItemType Directory -Path "bin" | Out-Null
+Set-Location server_c
+
+if (-not (Test-Path "server.exe")) {
+    Write-Host "Compiling C source files with GCC..." -ForegroundColor Yellow
+    gcc -O2 -Wall -Ilib -I. server.c codec.c db.c session.c room.c dispatcher.c sha256.c lib/cJSON.c lib/sqlite3.c -o server.exe -lws2_32
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Compilation failed with exit code $LASTEXITCODE" -ForegroundColor Red
+        Set-Location ..
+        exit $LASTEXITCODE
+    }
 }
 
-Write-Host "Compiling source files..." -ForegroundColor Yellow
-$javaFiles = Get-ChildItem -Recurse -Filter *.java shared,server,client | ForEach-Object { $_.FullName }
-javac -encoding UTF-8 -cp ".;lib/*" -d bin $javaFiles
-
-if ($LASTEXITCODE -eq 0) {
-    Write-Host "Compilation successful. Launching ServerCore..." -ForegroundColor Green
-    java -cp "bin;lib/*" server.core.ServerCore 8888
-} else {
-    Write-Host "Compilation failed with exit code $LASTEXITCODE" -ForegroundColor Red
-}
+Write-Host "Starting C Server on Port 8888..." -ForegroundColor Green
+.\server.exe 8888 ../exam_system.db
+Set-Location ..
