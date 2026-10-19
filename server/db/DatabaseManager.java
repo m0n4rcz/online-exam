@@ -201,7 +201,7 @@ public final class DatabaseManager {
             ps.setString(1, "student01");
             ps.setString(2, PasswordUtil.hashPassword("student123"));
             ps.setString(3, "Nguyen Van A");
-            ps.setString(4, "nva@student.ptit.edu.vn");
+            ps.setString(4, "nva@sis.hust.edu.vn");
             ps.setString(5, UserRole.STUDENT);
             ps.setLong(6, now);
             ps.addBatch();
@@ -210,7 +210,7 @@ public final class DatabaseManager {
             ps.setString(1, "student02");
             ps.setString(2, PasswordUtil.hashPassword("student123"));
             ps.setString(3, "Tran Thi B");
-            ps.setString(4, "ttb@student.ptit.edu.vn");
+            ps.setString(4, "ttb@sis.hust.edu.vn");
             ps.setString(5, UserRole.STUDENT);
             ps.setLong(6, now);
             ps.addBatch();

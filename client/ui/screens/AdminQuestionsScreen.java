@@ -25,6 +25,7 @@ import java.util.List;
  * Administrative and pedagogical management screen.
  * Provides Question Bank customization (topic, difficulty, CRUD) and
  * Activity Logging audit inspection.
+ * Styled for HUST academic examination environment.
  */
 public class AdminQuestionsScreen extends JPanel {
 
@@ -61,13 +62,13 @@ public class AdminQuestionsScreen extends JPanel {
         JPanel pnlTop = new JPanel(new BorderLayout());
         pnlTop.setOpaque(false);
 
-        JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 2));
+        JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 4));
         pnlTitle.setOpaque(false);
-        JLabel lblHeading = new JLabel("QUESTION BANK & SYSTEM AUDIT LOGS");
+        JLabel lblHeading = new JLabel("QUẢN TRỊ NGÂN HÀNG ĐỀ & NHẬT KÝ HỆ THỐNG - HUST");
         lblHeading.setFont(Theme.FONT_TITLE);
         lblHeading.setForeground(Theme.TEXT_PRIMARY);
 
-        JLabel lblSub = new JLabel("Manage questions classified by topic & difficulty, and review real-time audit logs");
+        JLabel lblSub = new JLabel("Quản lý danh mục câu hỏi phân loại theo chủ đề/độ khó và giám sát kiểm toán hệ thống");
         lblSub.setFont(Theme.FONT_SMALL);
         lblSub.setForeground(Theme.TEXT_SECONDARY);
         pnlTitle.add(lblHeading);
@@ -76,21 +77,21 @@ public class AdminQuestionsScreen extends JPanel {
         JPanel pnlActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pnlActions.setOpaque(false);
 
-        ModernButton btnBack = new ModernButton("Back to Home", ModernButton.Style.OUTLINE);
+        ModernButton btnBack = new ModernButton("Về Trang Chủ", ModernButton.Style.OUTLINE);
         btnBack.setPreferredSize(new Dimension(130, 38));
         btnBack.addActionListener(e -> app.showScreen("DASHBOARD"));
 
-        btnRefresh = new ModernButton("Refresh", ModernButton.Style.SECONDARY);
+        btnRefresh = new ModernButton("Làm Mới", ModernButton.Style.SECONDARY);
         btnRefresh.setPreferredSize(new Dimension(110, 38));
         btnRefresh.addActionListener(e -> loadData());
 
-        btnAddQuestion = new ModernButton("+ Add Question", ModernButton.Style.PRIMARY);
-        btnAddQuestion.setPreferredSize(new Dimension(150, 38));
-        btnAddQuestion.addActionListener(e -> showAddQuestionDialog());
-
-        btnDeleteQuestion = new ModernButton("Delete Question", ModernButton.Style.DANGER);
-        btnDeleteQuestion.setPreferredSize(new Dimension(150, 38));
+        btnDeleteQuestion = new ModernButton("Xóa Câu Hỏi", ModernButton.Style.DANGER);
+        btnDeleteQuestion.setPreferredSize(new Dimension(140, 38));
         btnDeleteQuestion.addActionListener(e -> deleteSelectedQuestion());
+
+        btnAddQuestion = new ModernButton("+ Thêm Câu Hỏi Mới", ModernButton.Style.HUST);
+        btnAddQuestion.setPreferredSize(new Dimension(180, 38));
+        btnAddQuestion.addActionListener(e -> showAddQuestionDialog());
 
         pnlActions.add(btnBack);
         pnlActions.add(btnRefresh);
@@ -107,12 +108,12 @@ public class AdminQuestionsScreen extends JPanel {
         tabbedPane.setBackground(Theme.BG_SURFACE);
         tabbedPane.setForeground(Theme.TEXT_PRIMARY);
 
-        tabbedPane.addTab("Question Bank Management", createQuestionsPanel());
-        tabbedPane.addTab("Activity Audit Logs", createLogsPanel());
+        tabbedPane.addTab("  Quản Lý Ngân Hàng Câu Hỏi  ", createQuestionsPanel());
+        tabbedPane.addTab("  Nhật Ký Kiểm Toán Hoạt Động (Audit Logs)  ", createLogsPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 
-        lblStatus = new JLabel("Ready");
+        lblStatus = new JLabel("Sẵn sàng thao tác quản trị");
         lblStatus.setFont(Theme.FONT_SMALL);
         lblStatus.setForeground(Theme.TEXT_SECONDARY);
         add(lblStatus, BorderLayout.SOUTH);
@@ -122,7 +123,7 @@ public class AdminQuestionsScreen extends JPanel {
         ModernCard card = new ModernCard(new BorderLayout(0, 10));
         card.setBorder(new EmptyBorder(12, 14, 12, 14));
 
-        String[] cols = {"ID", "Topic / Category", "Difficulty", "Question Content", "Correct", "Explanation"};
+        String[] cols = {"Mã ID", "Chủ Đề", "Độ Khó", "Nội Dung Câu Hỏi", "Đáp Án Chuẩn", "Lời Giải Chi Tiết"};
         questionModel = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int col) { return false; }
@@ -130,15 +131,16 @@ public class AdminQuestionsScreen extends JPanel {
 
         tblQuestions = new JTable(questionModel);
         Theme.styleTable(tblQuestions);
-        tblQuestions.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tblQuestions.getColumnModel().getColumn(0).setPreferredWidth(60);
         tblQuestions.getColumnModel().getColumn(1).setPreferredWidth(160);
         tblQuestions.getColumnModel().getColumn(2).setPreferredWidth(90);
         tblQuestions.getColumnModel().getColumn(3).setPreferredWidth(340);
-        tblQuestions.getColumnModel().getColumn(4).setPreferredWidth(60);
+        tblQuestions.getColumnModel().getColumn(4).setPreferredWidth(90);
 
         JScrollPane scroll = new JScrollPane(tblQuestions);
         scroll.getViewport().setBackground(Theme.BG_SURFACE);
         scroll.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 1));
+        Theme.styleScrollPane(scroll);
         card.add(scroll, BorderLayout.CENTER);
 
         return card;
@@ -148,7 +150,7 @@ public class AdminQuestionsScreen extends JPanel {
         ModernCard card = new ModernCard(new BorderLayout(0, 10));
         card.setBorder(new EmptyBorder(12, 14, 12, 14));
 
-        String[] cols = {"Timestamp", "Username", "Action", "Details", "IP Address"};
+        String[] cols = {"Thời Gian", "Tài Khoản", "Hành Động", "Nội Dung Chi Tiết", "Địa Chỉ IP"};
         logModel = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int col) { return false; }
@@ -164,13 +166,14 @@ public class AdminQuestionsScreen extends JPanel {
         JScrollPane scroll = new JScrollPane(tblLogs);
         scroll.getViewport().setBackground(Theme.BG_SURFACE);
         scroll.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 1));
+        Theme.styleScrollPane(scroll);
         card.add(scroll, BorderLayout.CENTER);
 
         return card;
     }
 
     public void loadData() {
-        lblStatus.setText("Loading question bank and activity logs...");
+        lblStatus.setText("Đang tải dữ liệu ngân hàng câu hỏi và nhật ký kiểm toán...");
         btnRefresh.setEnabled(false);
 
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -205,7 +208,7 @@ public class AdminQuestionsScreen extends JPanel {
                 btnRefresh.setEnabled(true);
                 if (error != null) {
                     lblStatus.setForeground(Theme.DANGER);
-                    lblStatus.setText("Failed to load: " + error.getMessage());
+                    lblStatus.setText("Lỗi tải dữ liệu: " + error.getMessage());
                     return;
                 }
 
@@ -242,7 +245,7 @@ public class AdminQuestionsScreen extends JPanel {
                 }
 
                 lblStatus.setForeground(Theme.TEXT_SECONDARY);
-                lblStatus.setText(String.format("Loaded %d questions and %d log entries.",
+                lblStatus.setText(String.format("Đã tải %d câu hỏi thi và %d bản ghi kiểm toán.",
                         qList != null ? qList.size() : 0, logList != null ? logList.size() : 0));
             }
         };
@@ -250,15 +253,15 @@ public class AdminQuestionsScreen extends JPanel {
     }
 
     private void showAddQuestionDialog() {
-        JDialog dialog = new JDialog(app, "Add New Question to Bank", true);
-        dialog.setSize(560, 600);
+        JDialog dialog = new JDialog(app, "Thêm Câu Hỏi Mới Vào Ngân Hàng Đề - HUST", true);
+        dialog.setSize(600, 640);
         dialog.setLocationRelativeTo(app);
         dialog.getContentPane().setBackground(Theme.BG_DARK);
         dialog.setLayout(new BorderLayout());
 
         JPanel pnl = new JPanel(new GridBagLayout());
         pnl.setOpaque(false);
-        pnl.setBorder(new EmptyBorder(16, 20, 16, 20));
+        pnl.setBorder(new EmptyBorder(16, 22, 16, 22));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -268,62 +271,97 @@ public class AdminQuestionsScreen extends JPanel {
         gbc.weightx = 1.0;
 
         // Content
-        pnl.add(new JLabel("Question Content:"), gbc);
+        JLabel lblCont = new JLabel("Nội dung câu hỏi:");
+        lblCont.setFont(Theme.FONT_BODY_BOLD);
+        lblCont.setForeground(Theme.TEXT_SECONDARY);
+        pnl.add(lblCont, gbc);
+
         gbc.gridy++;
-        ModernTextField txtContent = new ModernTextField("What is the primary function of DNS?");
+        ModernTextField txtContent = new ModernTextField("VD: Giao thức nào hoạt động ở tầng Transport?");
         pnl.add(txtContent, gbc);
 
         // Options A, B, C, D
         gbc.gridy++;
-        pnl.add(new JLabel("Option A:"), gbc);
+        JLabel lblA = new JLabel("Phương án A:");
+        lblA.setFont(Theme.FONT_BODY_BOLD);
+        lblA.setForeground(Theme.TEXT_SECONDARY);
+        pnl.add(lblA, gbc);
+
         gbc.gridy++;
-        ModernTextField txtA = new ModernTextField("Resolve domain names to IP addresses");
+        ModernTextField txtA = new ModernTextField("Nội dung lựa chọn A");
         pnl.add(txtA, gbc);
 
         gbc.gridy++;
-        pnl.add(new JLabel("Option B:"), gbc);
+        JLabel lblB = new JLabel("Phương án B:");
+        lblB.setFont(Theme.FONT_BODY_BOLD);
+        lblB.setForeground(Theme.TEXT_SECONDARY);
+        pnl.add(lblB, gbc);
+
         gbc.gridy++;
-        ModernTextField txtB = new ModernTextField("Encrypt web communication");
+        ModernTextField txtB = new ModernTextField("Nội dung lựa chọn B");
         pnl.add(txtB, gbc);
 
         gbc.gridy++;
-        pnl.add(new JLabel("Option C:"), gbc);
+        JLabel lblC = new JLabel("Phương án C:");
+        lblC.setFont(Theme.FONT_BODY_BOLD);
+        lblC.setForeground(Theme.TEXT_SECONDARY);
+        pnl.add(lblC, gbc);
+
         gbc.gridy++;
-        ModernTextField txtC = new ModernTextField("Route network packets");
+        ModernTextField txtC = new ModernTextField("Nội dung lựa chọn C");
         pnl.add(txtC, gbc);
 
         gbc.gridy++;
-        pnl.add(new JLabel("Option D:"), gbc);
+        JLabel lblD = new JLabel("Phương án D:");
+        lblD.setFont(Theme.FONT_BODY_BOLD);
+        lblD.setForeground(Theme.TEXT_SECONDARY);
+        pnl.add(lblD, gbc);
+
         gbc.gridy++;
-        ModernTextField txtD = new ModernTextField("Assign dynamic IP addresses");
+        ModernTextField txtD = new ModernTextField("Nội dung lựa chọn D");
         pnl.add(txtD, gbc);
 
         // Correct Option, Topic & Difficulty
         gbc.gridy++;
-        JPanel pnlMeta = new JPanel(new GridLayout(1, 3, 8, 0));
+        JPanel pnlMeta = new JPanel(new GridLayout(1, 3, 10, 0));
         pnlMeta.setOpaque(false);
 
-        JPanel pnlCorr = new JPanel(new BorderLayout(0, 2));
+        JPanel pnlCorr = new JPanel(new BorderLayout(0, 4));
         pnlCorr.setOpaque(false);
-        pnlCorr.add(new JLabel("Correct:"), BorderLayout.NORTH);
+        JLabel lblCorrTitle = new JLabel("Đáp án đúng:");
+        lblCorrTitle.setFont(Theme.FONT_BODY_BOLD);
+        lblCorrTitle.setForeground(Theme.TEXT_SECONDARY);
+        pnlCorr.add(lblCorrTitle, BorderLayout.NORTH);
         JComboBox<String> cmbCorr = new JComboBox<>(new String[]{"A", "B", "C", "D"});
+        cmbCorr.setFont(Theme.FONT_BODY);
+        cmbCorr.setBackground(Theme.BG_INPUT);
         pnlCorr.add(cmbCorr, BorderLayout.CENTER);
 
-        JPanel pnlTopic = new JPanel(new BorderLayout(0, 2));
+        JPanel pnlTopic = new JPanel(new BorderLayout(0, 4));
         pnlTopic.setOpaque(false);
-        pnlTopic.add(new JLabel("Topic:"), BorderLayout.NORTH);
+        JLabel lblTopicTitle = new JLabel("Chủ đề:");
+        lblTopicTitle.setFont(Theme.FONT_BODY_BOLD);
+        lblTopicTitle.setForeground(Theme.TEXT_SECONDARY);
+        pnlTopic.add(lblTopicTitle, BorderLayout.NORTH);
         JComboBox<String> cmbTopic = new JComboBox<>(new String[]{
                 QuestionCategory.NETWORKING, QuestionCategory.JAVA_CORE, QuestionCategory.DATABASE,
                 QuestionCategory.OPERATING_SYSTEMS, QuestionCategory.DATA_STRUCTURES, QuestionCategory.GENERAL_IT
         });
+        cmbTopic.setFont(Theme.FONT_BODY);
+        cmbTopic.setBackground(Theme.BG_INPUT);
         pnlTopic.add(cmbTopic, BorderLayout.CENTER);
 
-        JPanel pnlDiff = new JPanel(new BorderLayout(0, 2));
+        JPanel pnlDiff = new JPanel(new BorderLayout(0, 4));
         pnlDiff.setOpaque(false);
-        pnlDiff.add(new JLabel("Difficulty:"), BorderLayout.NORTH);
+        JLabel lblDiffTitle = new JLabel("Độ khó:");
+        lblDiffTitle.setFont(Theme.FONT_BODY_BOLD);
+        lblDiffTitle.setForeground(Theme.TEXT_SECONDARY);
+        pnlDiff.add(lblDiffTitle, BorderLayout.NORTH);
         JComboBox<String> cmbDiff = new JComboBox<>(new String[]{
                 QuestionDifficulty.EASY, QuestionDifficulty.MEDIUM, QuestionDifficulty.HARD
         });
+        cmbDiff.setFont(Theme.FONT_BODY);
+        cmbDiff.setBackground(Theme.BG_INPUT);
         pnlDiff.add(cmbDiff, BorderLayout.CENTER);
 
         pnlMeta.add(pnlCorr);
@@ -333,21 +371,26 @@ public class AdminQuestionsScreen extends JPanel {
 
         // Explanation
         gbc.gridy++;
-        pnl.add(new JLabel("Explanation / Giải thích:"), gbc);
+        JLabel lblExpl = new JLabel("Lời giải thích chi tiết:");
+        lblExpl.setFont(Theme.FONT_BODY_BOLD);
+        lblExpl.setForeground(Theme.TEXT_SECONDARY);
+        pnl.add(lblExpl, gbc);
+
         gbc.gridy++;
-        ModernTextField txtExpl = new ModernTextField("DNS converts human-friendly domain names to numeric IP addresses.");
+        ModernTextField txtExpl = new ModernTextField("Giải thích tại sao đáp án trên là chính xác...");
         pnl.add(txtExpl, gbc);
 
         dialog.add(pnl, BorderLayout.CENTER);
 
         // Buttons
-        JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 12));
+        JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 14));
         pnlBtn.setOpaque(false);
 
-        ModernButton btnCancel = new ModernButton("Cancel", ModernButton.Style.OUTLINE);
+        ModernButton btnCancel = new ModernButton("Hủy", ModernButton.Style.OUTLINE);
         btnCancel.addActionListener(e -> dialog.dispose());
 
-        ModernButton btnSave = new ModernButton("Save Question", ModernButton.Style.PRIMARY);
+        ModernButton btnSave = new ModernButton("Lưu Câu Hỏi", ModernButton.Style.HUST);
+        btnSave.setPreferredSize(new Dimension(140, 38));
         btnSave.addActionListener(e -> {
             String content = txtContent.getText().trim();
             String a = txtA.getText().trim();
@@ -360,7 +403,7 @@ public class AdminQuestionsScreen extends JPanel {
             String expl = txtExpl.getText().trim();
 
             if (content.isEmpty() || a.isEmpty() || b.isEmpty() || c.isEmpty() || d.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "Please fill in question content and all 4 options!");
+                JOptionPane.showMessageDialog(dialog, "Vui lòng nhập nội dung câu hỏi và đủ 4 phương án A, B, C, D!", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -385,7 +428,7 @@ public class AdminQuestionsScreen extends JPanel {
                 protected void done() {
                     btnSave.setEnabled(true);
                     if (err != null) {
-                        JOptionPane.showMessageDialog(dialog, "Error: " + err.getMessage());
+                        JOptionPane.showMessageDialog(dialog, "Lỗi thêm câu hỏi: " + err.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     if (res != null && res.isSuccess()) {
@@ -407,14 +450,14 @@ public class AdminQuestionsScreen extends JPanel {
     private void deleteSelectedQuestion() {
         int sel = tblQuestions.getSelectedRow();
         if (sel < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a question to delete!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn câu hỏi trong bảng để xóa!", "Chưa chọn câu hỏi", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         int qId = (Integer) tblQuestions.getValueAt(sel, 0);
         int conf = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to delete question #" + qId + " from question bank?",
-                "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                "Bạn có chắc chắn muốn xóa câu hỏi #" + qId + " khỏi ngân hàng đề thi?",
+                "Xác Nhận Xóa", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (conf == JOptionPane.YES_OPTION) {
             SwingWorker<Void, Void> worker = new SwingWorker<>() {
                 @Override

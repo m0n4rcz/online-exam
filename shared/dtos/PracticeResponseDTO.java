@@ -32,6 +32,7 @@ public class PracticeResponseDTO implements Serializable {
 
     public int getDurationSeconds() { return durationSeconds; }
     public void setDurationSeconds(int durationSeconds) { this.durationSeconds = durationSeconds; }
+    public int getDurationMinutes() { return Math.max(1, durationSeconds / 60); }
 
     public List<QuestionDTO> getQuestions() { return questions; }
     public void setQuestions(List<QuestionDTO> questions) {

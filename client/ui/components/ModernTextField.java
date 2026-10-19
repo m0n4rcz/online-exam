@@ -10,12 +10,13 @@ import java.awt.event.FocusEvent;
 
 /**
  * Modern text input field featuring placeholder text, rounded corners,
- * and high-contrast focused state borders.
+ * active focus ring, and high-contrast typography for student test applications.
  */
 public class ModernTextField extends JTextField {
 
     private String placeholder = "";
     private boolean isFocused = false;
+    private boolean isError = false;
     private int cornerRadius = 8;
 
     public ModernTextField() {
@@ -31,9 +32,11 @@ public class ModernTextField extends JTextField {
         setOpaque(false);
         setFont(Theme.FONT_BODY);
         setForeground(Theme.TEXT_PRIMARY);
-        setCaretColor(Theme.TEXT_PRIMARY);
-        setBorder(new EmptyBorder(8, 12, 8, 12));
-        setPreferredSize(new Dimension(220, 38));
+        setCaretColor(Color.WHITE);
+        setSelectedTextColor(Color.WHITE);
+        setSelectionColor(new Color(79, 70, 229, 180));
+        setBorder(new EmptyBorder(8, 14, 8, 14));
+        setPreferredSize(new Dimension(240, 40));
 
         addFocusListener(new FocusAdapter() {
             @Override
@@ -55,6 +58,11 @@ public class ModernTextField extends JTextField {
         repaint();
     }
 
+    public void setError(boolean error) {
+        this.isError = error;
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
@@ -67,15 +75,23 @@ public class ModernTextField extends JTextField {
         g2.setColor(Theme.BG_INPUT);
         g2.fillRoundRect(0, 0, w, h, cornerRadius, cornerRadius);
 
-        // Border
-        g2.setColor(isFocused ? Theme.BORDER_FOCUS : Theme.BORDER);
-        g2.setStroke(new BasicStroke(isFocused ? 1.5f : 1.0f));
-        g2.drawRoundRect(0, 0, w - 1, h - 1, cornerRadius, cornerRadius);
+        // Border with focus ring
+        if (isError) {
+            g2.setColor(Theme.DANGER);
+            g2.setStroke(new BasicStroke(1.5f));
+        } else if (isFocused) {
+            g2.setColor(Theme.BORDER_FOCUS);
+            g2.setStroke(new BasicStroke(2.0f));
+        } else {
+            g2.setColor(Theme.BORDER);
+            g2.setStroke(new BasicStroke(1.0f));
+        }
+        g2.drawRoundRect(1, 1, w - 2, h - 2, cornerRadius, cornerRadius);
 
         g2.dispose();
         super.paintComponent(g);
 
-        // Placeholder
+        // Placeholder text
         if (getText().isEmpty() && !placeholder.isEmpty() && !isFocused) {
             Graphics2D gPlaceholder = (Graphics2D) g.create();
             gPlaceholder.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -95,6 +111,7 @@ public class ModernTextField extends JTextField {
     public static class PasswordField extends JPasswordField {
         private String placeholder = "";
         private boolean isFocused = false;
+        private boolean isError = false;
         private int cornerRadius = 8;
 
         public PasswordField(String placeholder) {
@@ -102,9 +119,11 @@ public class ModernTextField extends JTextField {
             setOpaque(false);
             setFont(Theme.FONT_BODY);
             setForeground(Theme.TEXT_PRIMARY);
-            setCaretColor(Theme.TEXT_PRIMARY);
-            setBorder(new EmptyBorder(8, 12, 8, 12));
-            setPreferredSize(new Dimension(220, 38));
+            setCaretColor(Color.WHITE);
+            setSelectedTextColor(Color.WHITE);
+            setSelectionColor(new Color(79, 70, 229, 180));
+            setBorder(new EmptyBorder(8, 14, 8, 14));
+            setPreferredSize(new Dimension(240, 40));
 
             addFocusListener(new FocusAdapter() {
                 @Override
@@ -121,6 +140,11 @@ public class ModernTextField extends JTextField {
             });
         }
 
+        public void setError(boolean error) {
+            this.isError = error;
+            repaint();
+        }
+
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
@@ -132,9 +156,17 @@ public class ModernTextField extends JTextField {
             g2.setColor(Theme.BG_INPUT);
             g2.fillRoundRect(0, 0, w, h, cornerRadius, cornerRadius);
 
-            g2.setColor(isFocused ? Theme.BORDER_FOCUS : Theme.BORDER);
-            g2.setStroke(new BasicStroke(isFocused ? 1.5f : 1.0f));
-            g2.drawRoundRect(0, 0, w - 1, h - 1, cornerRadius, cornerRadius);
+            if (isError) {
+                g2.setColor(Theme.DANGER);
+                g2.setStroke(new BasicStroke(1.5f));
+            } else if (isFocused) {
+                g2.setColor(Theme.BORDER_FOCUS);
+                g2.setStroke(new BasicStroke(2.0f));
+            } else {
+                g2.setColor(Theme.BORDER);
+                g2.setStroke(new BasicStroke(1.0f));
+            }
+            g2.drawRoundRect(1, 1, w - 2, h - 2, cornerRadius, cornerRadius);
 
             g2.dispose();
             super.paintComponent(g);

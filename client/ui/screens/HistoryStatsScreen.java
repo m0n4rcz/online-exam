@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * Screen displaying both persistent exam records and rich graphical visual analytics
  * (Score progression line charts, Topic accuracy bar charts, summary KPIs).
+ * Styled for HUST academic examination environment.
  */
 public class HistoryStatsScreen extends JPanel {
 
@@ -61,13 +62,13 @@ public class HistoryStatsScreen extends JPanel {
         JPanel pnlTop = new JPanel(new BorderLayout());
         pnlTop.setOpaque(false);
 
-        JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 2));
+        JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 4));
         pnlTitle.setOpaque(false);
-        JLabel lblHeading = new JLabel("TEST HISTORY & GRAPHICAL ANALYTICS");
+        JLabel lblHeading = new JLabel("LỊCH SỬ THI & PHÂN TÍCH TIẾN ĐỘ HỌC TẬP");
         lblHeading.setFont(Theme.FONT_TITLE);
         lblHeading.setForeground(Theme.TEXT_PRIMARY);
 
-        JLabel lblSub = new JLabel("Visual progress charts and persistent record history for your exams");
+        JLabel lblSub = new JLabel("Theo dõi xu hướng điểm số và đánh giá mức độ thành thạo kiến thức theo từng chủ đề");
         lblSub.setFont(Theme.FONT_SMALL);
         lblSub.setForeground(Theme.TEXT_SECONDARY);
         pnlTitle.add(lblHeading);
@@ -76,12 +77,12 @@ public class HistoryStatsScreen extends JPanel {
         JPanel pnlActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pnlActions.setOpaque(false);
 
-        ModernButton btnBack = new ModernButton("Back to Home", ModernButton.Style.OUTLINE);
+        ModernButton btnBack = new ModernButton("Về Trang Chủ", ModernButton.Style.OUTLINE);
         btnBack.setPreferredSize(new Dimension(130, 38));
         btnBack.addActionListener(e -> app.showScreen("DASHBOARD"));
 
-        btnRefresh = new ModernButton("Refresh Data", ModernButton.Style.PRIMARY);
-        btnRefresh.setPreferredSize(new Dimension(130, 38));
+        btnRefresh = new ModernButton("Cập Nhật Dữ Liệu", ModernButton.Style.HUST);
+        btnRefresh.setPreferredSize(new Dimension(160, 38));
         btnRefresh.addActionListener(e -> loadData());
 
         pnlActions.add(btnBack);
@@ -97,13 +98,13 @@ public class HistoryStatsScreen extends JPanel {
         tabbedPane.setBackground(Theme.BG_SURFACE);
         tabbedPane.setForeground(Theme.TEXT_PRIMARY);
 
-        tabbedPane.addTab("Visual Graphical Statistics", createAnalyticsPanel());
-        tabbedPane.addTab("Exam History Records", createHistoryTablePanel());
+        tabbedPane.addTab("  Biểu Đồ Trực Quan & Thống Kê  ", createAnalyticsPanel());
+        tabbedPane.addTab("  Nhật Ký Các Đợt Làm Bài  ", createHistoryTablePanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 
         // Status bar
-        lblStatus = new JLabel("Ready");
+        lblStatus = new JLabel("Sẵn sàng hiển thị dữ liệu học tập");
         lblStatus.setFont(Theme.FONT_SMALL);
         lblStatus.setForeground(Theme.TEXT_SECONDARY);
         add(lblStatus, BorderLayout.SOUTH);
@@ -118,10 +119,10 @@ public class HistoryStatsScreen extends JPanel {
         JPanel pnlCards = new JPanel(new GridLayout(1, 4, 16, 0));
         pnlCards.setOpaque(false);
 
-        cardTotalTests = new StatCard("Total Tests Taken", "0", "Completed exams", Theme.PRIMARY);
-        cardAvgScore   = new StatCard("Average Score", "0.0", "Out of 10.0 scale", Theme.SUCCESS);
-        cardHighScore  = new StatCard("Highest Score", "0.0", "Personal record", Theme.WARNING);
-        cardAccuracy   = new StatCard("Overall Accuracy", "0%", "Correct answers ratio", Theme.SECONDARY);
+        cardTotalTests = new StatCard("Tổng Số Bài Thi", "0", "Đã hoàn thành", Theme.PRIMARY);
+        cardAvgScore   = new StatCard("Điểm Trung Bình", "0.0", "Thang điểm 10", Theme.SUCCESS);
+        cardHighScore  = new StatCard("Điểm Cao Nhất", "0.0", "Kỷ lục cá nhân", Theme.WARNING);
+        cardAccuracy   = new StatCard("Độ Chính Xác Chung", "0%", "Tỉ lệ câu trả lời đúng", Theme.HUST_RED);
 
         pnlCards.add(cardTotalTests);
         pnlCards.add(cardAvgScore);
@@ -134,8 +135,8 @@ public class HistoryStatsScreen extends JPanel {
         JPanel pnlCharts = new JPanel(new GridLayout(1, 2, 16, 0));
         pnlCharts.setOpaque(false);
 
-        chartScoreTrend = new ChartPanel("Score Progression Trend (Line Chart)", ChartPanel.ChartType.LINE);
-        chartTopicAccuracy = new ChartPanel("Topic Mastery & Accuracy (Bar Chart)", ChartPanel.ChartType.BAR);
+        chartScoreTrend = new ChartPanel("Xu Hướng Điểm Số Qua Các Đợt Thi (Line Chart)", ChartPanel.ChartType.LINE);
+        chartTopicAccuracy = new ChartPanel("Độ Thành Thạo Theo Chủ Đề Kiến Thức (Bar Chart)", ChartPanel.ChartType.BAR);
 
         pnlCharts.add(chartScoreTrend);
         pnlCharts.add(chartTopicAccuracy);
@@ -148,7 +149,7 @@ public class HistoryStatsScreen extends JPanel {
         ModernCard card = new ModernCard(new BorderLayout(0, 10));
         card.setBorder(new EmptyBorder(12, 14, 12, 14));
 
-        String[] cols = {"Date & Time", "Mode", "Title / Room", "Topic", "Difficulty", "Score (/10.0)", "Correct", "Questions"};
+        String[] cols = {"Thời Gian", "Chế Độ", "Tên Đợt Thi / Phòng", "Chủ Đề", "Độ Khó", "Điểm (/10.0)", "Số Câu Đúng", "Tổng Số Câu"};
         historyModel = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int col) { return false; }
@@ -160,13 +161,14 @@ public class HistoryStatsScreen extends JPanel {
         JScrollPane scroll = new JScrollPane(tblHistory);
         scroll.getViewport().setBackground(Theme.BG_SURFACE);
         scroll.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 1));
+        Theme.styleScrollPane(scroll);
         card.add(scroll, BorderLayout.CENTER);
 
         return card;
     }
 
     public void loadData() {
-        lblStatus.setText("Loading analytics and test history...");
+        lblStatus.setText("Đang tải dữ liệu lịch sử thi và biểu đồ thống kê...");
         btnRefresh.setEnabled(false);
 
         String username = client.getCurrentUser() != null ? client.getCurrentUser().getUsername() : "student01";
@@ -203,7 +205,7 @@ public class HistoryStatsScreen extends JPanel {
                 btnRefresh.setEnabled(true);
                 if (error != null) {
                     lblStatus.setForeground(Theme.DANGER);
-                    lblStatus.setText("Failed to load: " + error.getMessage());
+                    lblStatus.setText("Lỗi tải dữ liệu: " + error.getMessage());
                     return;
                 }
 
@@ -226,7 +228,7 @@ public class HistoryStatsScreen extends JPanel {
                         String dateStr = sdf.format(new Date(rec.getTakenAt()));
                         historyModel.addRow(new Object[]{
                                 dateStr,
-                                rec.getTestType(),
+                                "PRACTICE".equalsIgnoreCase(rec.getTestType()) ? "Tự Luyện" : "Thi Đấu",
                                 rec.getTitle(),
                                 rec.getTopic(),
                                 rec.getDifficulty(),
@@ -238,7 +240,7 @@ public class HistoryStatsScreen extends JPanel {
                 }
 
                 lblStatus.setForeground(Theme.TEXT_SECONDARY);
-                lblStatus.setText("Updated analytics successfully.");
+                lblStatus.setText("Cập nhật dữ liệu phân tích học tập thành công.");
             }
         };
         worker.execute();

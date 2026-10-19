@@ -17,4 +17,12 @@ public final class UserRole {
         String r = role.trim().toUpperCase();
         return r.equals(STUDENT) || r.equals(TEACHER) || r.equals(ADMIN);
     }
+
+    public static boolean isAdmin(String role) {
+        return ADMIN.equalsIgnoreCase(role);
+    }
+
+    public static boolean isTeacher(String role) {
+        return TEACHER.equalsIgnoreCase(role);
+    }
 }

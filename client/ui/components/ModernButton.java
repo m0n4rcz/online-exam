@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 
 /**
  * Modern stylized button with smooth hover animation, rounded corners,
- * and high-contrast typography.
+ * and high-contrast academic typography.
  */
 public class ModernButton extends JButton {
 
@@ -17,12 +17,15 @@ public class ModernButton extends JButton {
         PRIMARY,
         SECONDARY,
         SUCCESS,
+        WARNING,
         DANGER,
-        OUTLINE
+        OUTLINE,
+        HUST
     }
 
-    private final Style style;
+    private Style style;
     private boolean isHovered = false;
+    private boolean isPressed = false;
     private int cornerRadius = 10;
 
     public ModernButton(String text) {
@@ -35,6 +38,15 @@ public class ModernButton extends JButton {
         init();
     }
 
+    public void setStyle(Style style) {
+        this.style = style;
+        repaint();
+    }
+
+    public Style getStyle() {
+        return this.style;
+    }
+
     private void init() {
         setFont(Theme.FONT_BODY_BOLD);
         setFocusPainted(false);
@@ -42,7 +54,7 @@ public class ModernButton extends JButton {
         setContentAreaFilled(false);
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        setPreferredSize(new Dimension(140, 38));
+        setPreferredSize(new Dimension(140, 40));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -56,7 +68,24 @@ public class ModernButton extends JButton {
             @Override
             public void mouseExited(MouseEvent e) {
                 isHovered = false;
+                isPressed = false;
                 repaint();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (isEnabled()) {
+                    isPressed = true;
+                    repaint();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (isEnabled()) {
+                    isPressed = false;
+                    repaint();
+                }
             }
         });
     }
@@ -82,15 +111,17 @@ public class ModernButton extends JButton {
             fg = Theme.TEXT_MUTED;
         } else {
             bg = switch (style) {
-                case PRIMARY -> isHovered ? Theme.PRIMARY_HOVER : Theme.PRIMARY;
-                case SECONDARY -> isHovered ? Theme.SECONDARY_HOVER : Theme.SECONDARY;
-                case SUCCESS -> isHovered ? Theme.SUCCESS_HOVER : Theme.SUCCESS;
-                case DANGER -> isHovered ? Theme.DANGER_HOVER : Theme.DANGER;
-                case OUTLINE -> isHovered ? Theme.BG_CARD_HOVER : Theme.BG_CARD;
+                case PRIMARY -> isPressed ? Theme.PRIMARY_HOVER.darker() : (isHovered ? Theme.PRIMARY_HOVER : Theme.PRIMARY);
+                case SECONDARY -> isPressed ? Theme.SECONDARY_HOVER.darker() : (isHovered ? Theme.SECONDARY_HOVER : Theme.SECONDARY);
+                case SUCCESS -> isPressed ? Theme.SUCCESS_HOVER.darker() : (isHovered ? Theme.SUCCESS_HOVER : Theme.SUCCESS);
+                case WARNING -> isHovered ? Theme.WARNING.brighter() : Theme.WARNING;
+                case DANGER -> isPressed ? Theme.DANGER_HOVER.darker() : (isHovered ? Theme.DANGER_HOVER : Theme.DANGER);
+                case HUST -> isHovered ? new Color(225, 29, 36) : Theme.HUST_RED;
+                case OUTLINE -> isHovered ? Theme.BG_CARD_HOVER : Theme.BG_SURFACE;
             };
         }
 
-        // Background
+        // Draw pill background
         g2.setColor(bg);
         g2.fillRoundRect(0, 0, w, h, cornerRadius, cornerRadius);
 

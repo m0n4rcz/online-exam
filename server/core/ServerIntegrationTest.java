@@ -85,7 +85,7 @@ public class ServerIntegrationTest {
             // -------------------------------------------------------------
             totalTests++;
             System.out.print("[TEST 2] Register Account over Socket... ");
-            RegisterRequest regReq = new RegisterRequest("e2e_student", "SecurePass!123", "E2E Student", "e2e@ptit.edu.vn");
+            RegisterRequest regReq = new RegisterRequest("e2e_student", "SecurePass!123", "E2E Student", "e2e@sis.hust.edu.vn");
             Packet regPacket = Packet.ok(OpCodes.REGISTER_REQ, regReq);
             PacketCodec.writePacket(out, regPacket);
 

@@ -19,7 +19,7 @@ import java.awt.*;
 
 /**
  * Authentication screen providing Login, Account Registration,
- * and Socket Server Connection configuration.
+ * and Socket Server Connection configuration for HUST Examination Platform.
  */
 public class LoginScreen extends JPanel {
 
@@ -63,24 +63,35 @@ public class LoginScreen extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
 
         // Container Card
-        ModernCard rootCard = new ModernCard(new BorderLayout(0, 20));
-        rootCard.setPreferredSize(new Dimension(500, 620));
-        rootCard.setBorder(new EmptyBorder(24, 28, 24, 28));
+        ModernCard rootCard = new ModernCard(new BorderLayout(0, 16));
+        rootCard.setPreferredSize(new Dimension(520, 640));
+        rootCard.setBorder(new EmptyBorder(24, 28, 20, 28));
 
-        // 1. Top Header Banner
-        JPanel pnlHeader = new JPanel(new GridLayout(2, 1, 0, 4));
+        // 1. Top Header Banner - HUST Branding
+        JPanel pnlHeader = new JPanel();
+        pnlHeader.setLayout(new BoxLayout(pnlHeader, BoxLayout.Y_AXIS));
         pnlHeader.setOpaque(false);
 
-        JLabel lblTitle = new JLabel("ONLINE EXAMINATION SYSTEM", SwingConstants.CENTER);
+        JPanel pnlBadge = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        pnlBadge.setOpaque(false);
+        JLabel badgeHust = Theme.createBadge("HANOI UNIVERSITY OF SCIENCE AND TECHNOLOGY", Theme.HUST_RED, Color.WHITE);
+        pnlBadge.add(badgeHust);
+        pnlHeader.add(pnlBadge);
+        pnlHeader.add(Box.createVerticalStrut(8));
+
+        JLabel lblTitle = new JLabel("HUST ONLINE EXAM PLATFORM", SwingConstants.CENTER);
         lblTitle.setFont(Theme.FONT_TITLE);
         lblTitle.setForeground(Theme.TEXT_PRIMARY);
+        lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlHeader.add(lblTitle);
+        pnlHeader.add(Box.createVerticalStrut(4));
 
-        JLabel lblSub = new JLabel("Real-time TCP Socket Multiplayer & Practice Platform", SwingConstants.CENTER);
+        JLabel lblSub = new JLabel("Cổng Khảo thí & Luyện thi Trực tuyến - ĐHBK Hà Nội", SwingConstants.CENTER);
         lblSub.setFont(Theme.FONT_SMALL);
         lblSub.setForeground(Theme.TEXT_SECONDARY);
-
-        pnlHeader.add(lblTitle);
+        lblSub.setAlignmentX(Component.CENTER_ALIGNMENT);
         pnlHeader.add(lblSub);
+
         rootCard.add(pnlHeader, BorderLayout.NORTH);
 
         // 2. Center Tabs (Login vs Register)
@@ -89,28 +100,28 @@ public class LoginScreen extends JPanel {
         tabbedPane.setBackground(Theme.BG_SURFACE);
         tabbedPane.setForeground(Theme.TEXT_PRIMARY);
 
-        tabbedPane.addTab("Sign In (Đăng nhập)", createLoginPanel());
-        tabbedPane.addTab("Register (Đăng ký)", createRegisterPanel());
+        tabbedPane.addTab("Đăng nhập (Sign In)", createLoginPanel());
+        tabbedPane.addTab("Đăng ký mới (Register)", createRegisterPanel());
 
         rootCard.add(tabbedPane, BorderLayout.CENTER);
 
         // 3. Bottom Connection & Quick Accounts Bar
-        JPanel pnlBottom = new JPanel(new BorderLayout(0, 8));
+        JPanel pnlBottom = new JPanel(new BorderLayout(0, 10));
         pnlBottom.setOpaque(false);
 
         // Quick login presets
         JPanel pnlPresets = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0));
         pnlPresets.setOpaque(false);
-        JLabel lblQuick = new JLabel("Quick Login:");
+        JLabel lblQuick = new JLabel("Tài khoản mẫu:");
         lblQuick.setFont(Theme.FONT_SMALL);
         lblQuick.setForeground(Theme.TEXT_MUTED);
         pnlPresets.add(lblQuick);
 
         String[][] presets = {
-                {"student01", "student123", "Student 1"},
-                {"student02", "student123", "Student 2"},
-                {"teacher01", "teacher123", "Teacher"},
-                {"admin", "admin123", "Admin"}
+                {"student01", "student123", "Sinh viên 1"},
+                {"student02", "student123", "Sinh viên 2"},
+                {"teacher01", "teacher123", "Giảng viên"},
+                {"admin", "admin123", "Quản trị viên"}
         };
 
         for (String[] p : presets) {
@@ -149,9 +160,9 @@ public class LoginScreen extends JPanel {
         txtPort.setPreferredSize(new Dimension(60, 28));
         txtPort.setFont(Theme.FONT_SMALL);
 
-        lblConnStatus = new JLabel("Not Connected");
+        lblConnStatus = new JLabel("Sẵn sàng kết nối");
         lblConnStatus.setFont(Theme.FONT_BADGE);
-        lblConnStatus.setForeground(Theme.WARNING);
+        lblConnStatus.setForeground(Theme.SUCCESS);
 
         pnlConn.add(lblH);
         pnlConn.add(txtHost);
@@ -163,7 +174,6 @@ public class LoginScreen extends JPanel {
         pnlBottom.add(pnlConn, BorderLayout.SOUTH);
 
         rootCard.add(pnlBottom, BorderLayout.SOUTH);
-
         add(rootCard, gbc);
     }
 
@@ -179,24 +189,24 @@ public class LoginScreen extends JPanel {
         gbc.gridy = 0;
         gbc.weightx = 1.0;
 
-        JLabel lblU = new JLabel("Username / Tên đăng nhập");
+        JLabel lblU = new JLabel("Tên đăng nhập (Username):");
         lblU.setFont(Theme.FONT_BODY_BOLD);
         lblU.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblU, gbc);
 
         gbc.gridy++;
-        txtLoginUser = new ModernTextField("Enter username...");
+        txtLoginUser = new ModernTextField("Nhập tên đăng nhập hoặc mã sinh viên...");
         txtLoginUser.setText("student01");
         pnl.add(txtLoginUser, gbc);
 
         gbc.gridy++;
-        JLabel lblP = new JLabel("Password / Mật khẩu");
+        JLabel lblP = new JLabel("Mật khẩu (Password):");
         lblP.setFont(Theme.FONT_BODY_BOLD);
         lblP.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblP, gbc);
 
         gbc.gridy++;
-        txtLoginPass = new ModernTextField.PasswordField("Enter password...");
+        txtLoginPass = new ModernTextField.PasswordField("Nhập mật khẩu...");
         txtLoginPass.setText("student123");
         pnl.add(txtLoginPass, gbc);
 
@@ -207,7 +217,7 @@ public class LoginScreen extends JPanel {
         pnl.add(lblLoginError, gbc);
 
         gbc.gridy++;
-        btnLogin = new ModernButton("Sign In to Account", ModernButton.Style.PRIMARY);
+        btnLogin = new ModernButton("Đăng nhập Hệ thống", ModernButton.Style.PRIMARY);
         btnLogin.setPreferredSize(new Dimension(200, 42));
         btnLogin.addActionListener(e -> doLogin());
         pnl.add(btnLogin, gbc);
@@ -231,43 +241,43 @@ public class LoginScreen extends JPanel {
         gbc.gridy = 0;
         gbc.weightx = 1.0;
 
-        JLabel lblU = new JLabel("Username (Tài khoản)");
+        JLabel lblU = new JLabel("Tên tài khoản (Username):");
         lblU.setFont(Theme.FONT_BODY_BOLD);
         lblU.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblU, gbc);
 
         gbc.gridy++;
-        txtRegUser = new ModernTextField("Choose username...");
+        txtRegUser = new ModernTextField("Chọn tên đăng nhập...");
         pnl.add(txtRegUser, gbc);
 
         gbc.gridy++;
-        JLabel lblP = new JLabel("Password (Mật khẩu)");
+        JLabel lblP = new JLabel("Mật khẩu (Password):");
         lblP.setFont(Theme.FONT_BODY_BOLD);
         lblP.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblP, gbc);
 
         gbc.gridy++;
-        txtRegPass = new ModernTextField.PasswordField("Choose password...");
+        txtRegPass = new ModernTextField.PasswordField("Chọn mật khẩu...");
         pnl.add(txtRegPass, gbc);
 
         gbc.gridy++;
-        JLabel lblN = new JLabel("Full Name (Họ và tên)");
+        JLabel lblN = new JLabel("Họ và tên sinh viên (Full Name):");
         lblN.setFont(Theme.FONT_BODY_BOLD);
         lblN.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblN, gbc);
 
         gbc.gridy++;
-        txtRegName = new ModernTextField("Enter your full name...");
+        txtRegName = new ModernTextField("Ví dụ: Nguyễn Văn An");
         pnl.add(txtRegName, gbc);
 
         gbc.gridy++;
-        JLabel lblE = new JLabel("Email (Địa chỉ email)");
+        JLabel lblE = new JLabel("Email HUST:");
         lblE.setFont(Theme.FONT_BODY_BOLD);
         lblE.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblE, gbc);
 
         gbc.gridy++;
-        txtRegEmail = new ModernTextField("student@ptit.edu.vn");
+        txtRegEmail = new ModernTextField("an.nv210001@sis.hust.edu.vn");
         pnl.add(txtRegEmail, gbc);
 
         gbc.gridy++;
@@ -277,7 +287,7 @@ public class LoginScreen extends JPanel {
         pnl.add(lblRegStatus, gbc);
 
         gbc.gridy++;
-        btnRegister = new ModernButton("Create New Account", ModernButton.Style.SUCCESS);
+        btnRegister = new ModernButton("Tạo Tài khoản Mới", ModernButton.Style.SUCCESS);
         btnRegister.setPreferredSize(new Dimension(200, 40));
         btnRegister.addActionListener(e -> doRegister());
         pnl.add(btnRegister, gbc);
@@ -289,10 +299,10 @@ public class LoginScreen extends JPanel {
         if (!client.isConnected()) {
             String host = txtHost.getText().trim();
             int port = Integer.parseInt(txtPort.getText().trim());
-            lblConnStatus.setText("Connecting...");
+            lblConnStatus.setText("Đang kết nối...");
             lblConnStatus.setForeground(Theme.WARNING);
             client.connect(host, port);
-            lblConnStatus.setText("Connected");
+            lblConnStatus.setText("Đã kết nối");
             lblConnStatus.setForeground(Theme.SUCCESS);
         }
     }
@@ -302,12 +312,12 @@ public class LoginScreen extends JPanel {
         String password = new String(txtLoginPass.getPassword()).trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            lblLoginError.setText("Please enter username and password!");
+            lblLoginError.setText("Vui lòng nhập đầy đủ tài khoản và mật khẩu!");
             return;
         }
 
         lblLoginError.setForeground(Theme.TEXT_SECONDARY);
-        lblLoginError.setText("Authenticating with server...");
+        lblLoginError.setText("Đang xác thực thông tin với máy chủ HUST...");
         btnLogin.setEnabled(false);
 
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -332,8 +342,8 @@ public class LoginScreen extends JPanel {
                 btnLogin.setEnabled(true);
                 if (error != null) {
                     lblLoginError.setForeground(Theme.DANGER);
-                    lblLoginError.setText("Connection failed: " + error.getMessage());
-                    lblConnStatus.setText("Offline");
+                    lblLoginError.setText("Kết nối thất bại: " + error.getMessage());
+                    lblConnStatus.setText("Mất kết nối");
                     lblConnStatus.setForeground(Theme.DANGER);
                     return;
                 }
@@ -346,11 +356,11 @@ public class LoginScreen extends JPanel {
                         app.onLoginSuccess(res.toUserProfileDTO());
                     } else {
                         lblLoginError.setForeground(Theme.DANGER);
-                        lblLoginError.setText(res != null ? res.getMessage() : "Login failed");
+                        lblLoginError.setText(res != null ? res.getMessage() : "Đăng nhập thất bại");
                     }
                 } else {
                     lblLoginError.setForeground(Theme.DANGER);
-                    lblLoginError.setText(resPacket != null ? resPacket.getPayloadAsString() : "Invalid credentials");
+                    lblLoginError.setText(resPacket != null ? resPacket.getPayloadAsString() : "Sai tên đăng nhập hoặc mật khẩu");
                 }
             }
         };
@@ -365,12 +375,12 @@ public class LoginScreen extends JPanel {
 
         if (username.isEmpty() || password.isEmpty() || name.isEmpty()) {
             lblRegStatus.setForeground(Theme.DANGER);
-            lblRegStatus.setText("Username, password, and name are required!");
+            lblRegStatus.setText("Vui lòng điền đủ tên tài khoản, mật khẩu và họ tên!");
             return;
         }
 
         lblRegStatus.setForeground(Theme.TEXT_SECONDARY);
-        lblRegStatus.setText("Registering account...");
+        lblRegStatus.setText("Đang tạo tài khoản trên hệ thống...");
         btnRegister.setEnabled(false);
 
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -395,19 +405,19 @@ public class LoginScreen extends JPanel {
                 btnRegister.setEnabled(true);
                 if (error != null) {
                     lblRegStatus.setForeground(Theme.DANGER);
-                    lblRegStatus.setText("Error: " + error.getMessage());
+                    lblRegStatus.setText("Lỗi: " + error.getMessage());
                     return;
                 }
 
                 if (resPacket != null && resPacket.isSuccess()) {
                     RegisterResponse res = resPacket.getPayloadAs(RegisterResponse.class);
                     lblRegStatus.setForeground(Theme.SUCCESS);
-                    lblRegStatus.setText("Account created! Please switch to Sign In.");
+                    lblRegStatus.setText("Tạo tài khoản thành công! Hãy chuyển sang Đăng nhập.");
                     txtLoginUser.setText(username);
                     txtLoginPass.setText(password);
                 } else {
                     lblRegStatus.setForeground(Theme.DANGER);
-                    lblRegStatus.setText(resPacket != null ? resPacket.getPayloadAsString() : "Registration failed");
+                    lblRegStatus.setText(resPacket != null ? resPacket.getPayloadAsString() : "Đăng ký không thành công");
                 }
             }
         };

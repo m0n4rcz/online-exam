@@ -89,7 +89,7 @@ public class DatabaseSelfTest {
         System.out.print("[TEST 3] User Registration, Duplicate Prevention & Profile Update... ");
         try {
             // Register new user
-            UserProfileDTO newUser = userDAO.register("newbie99", "secretPass99", "Newbie Learner", "newbie@ptit.edu.vn", UserRole.STUDENT);
+            UserProfileDTO newUser = userDAO.register("newbie99", "secretPass99", "Newbie Learner", "newbie@sis.hust.edu.vn", UserRole.STUDENT);
             assert newUser != null;
             assert "newbie99".equals(newUser.getUsername());
 
@@ -107,11 +107,11 @@ public class DatabaseSelfTest {
             assert duplicateFailed : "Registering duplicate username must throw IllegalStateException";
 
             // Update profile
-            boolean updated = userDAO.updateProfile("newbie99", "Newbie Pro Gamer", "newbie_pro@ptit.edu.vn");
+            boolean updated = userDAO.updateProfile("newbie99", "Newbie Pro Gamer", "newbie_pro@sis.hust.edu.vn");
             assert updated;
             UserProfileDTO refreshed = userDAO.findByUsername("newbie99");
             assert "Newbie Pro Gamer".equals(refreshed.getDisplayName());
-            assert "newbie_pro@ptit.edu.vn".equals(refreshed.getEmail());
+            assert "newbie_pro@sis.hust.edu.vn".equals(refreshed.getEmail());
 
             System.out.println("PASSED");
             testsPassed++;

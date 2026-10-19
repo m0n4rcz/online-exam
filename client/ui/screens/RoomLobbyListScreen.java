@@ -24,6 +24,7 @@ import java.util.List;
 /**
  * Lobby screen displaying all active and completed exam rooms.
  * Allows creating a new room, joining joinable rooms, and inspecting completed room results.
+ * Styled for HUST academic examination environment.
  */
 public class RoomLobbyListScreen extends JPanel {
 
@@ -56,13 +57,13 @@ public class RoomLobbyListScreen extends JPanel {
         JPanel pnlTop = new JPanel(new BorderLayout(16, 0));
         pnlTop.setOpaque(false);
 
-        JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 2));
+        JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 4));
         pnlTitle.setOpaque(false);
-        JLabel lblHeading = new JLabel("TEST ROOMS LOBBY (PHÒNG THI ĐẤU)");
+        JLabel lblHeading = new JLabel("SẢNH PHÒNG THI ĐẤU TRỰC TUYẾN - HUST");
         lblHeading.setFont(Theme.FONT_TITLE);
         lblHeading.setForeground(Theme.TEXT_PRIMARY);
 
-        JLabel lblSub = new JLabel("Browse available test rooms, join live competitions, or review finished results");
+        JLabel lblSub = new JLabel("Tham gia phòng thi nhóm học phần hoặc tra cứu kết quả các đợt thi đã hoàn thành");
         lblSub.setFont(Theme.FONT_SMALL);
         lblSub.setForeground(Theme.TEXT_SECONDARY);
         pnlTitle.add(lblHeading);
@@ -71,16 +72,16 @@ public class RoomLobbyListScreen extends JPanel {
         JPanel pnlTopActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pnlTopActions.setOpaque(false);
 
-        ModernButton btnBack = new ModernButton("Back to Home", ModernButton.Style.OUTLINE);
+        ModernButton btnBack = new ModernButton("Về Trang Chủ", ModernButton.Style.OUTLINE);
         btnBack.setPreferredSize(new Dimension(130, 38));
         btnBack.addActionListener(e -> app.showScreen("DASHBOARD"));
 
-        btnRefresh = new ModernButton("Refresh", ModernButton.Style.SECONDARY);
+        btnRefresh = new ModernButton("Làm Mới", ModernButton.Style.SECONDARY);
         btnRefresh.setPreferredSize(new Dimension(110, 38));
         btnRefresh.addActionListener(e -> loadRooms());
 
-        btnCreate = new ModernButton("+ Create Room", ModernButton.Style.PRIMARY);
-        btnCreate.setPreferredSize(new Dimension(140, 38));
+        btnCreate = new ModernButton("+ Tạo Phòng Thi Mới", ModernButton.Style.HUST);
+        btnCreate.setPreferredSize(new Dimension(175, 38));
         btnCreate.addActionListener(e -> showCreateRoomDialog());
 
         pnlTopActions.add(btnBack);
@@ -95,7 +96,7 @@ public class RoomLobbyListScreen extends JPanel {
         ModernCard tableCard = new ModernCard(new BorderLayout(0, 10));
         tableCard.setBorder(new EmptyBorder(12, 14, 12, 14));
 
-        String[] cols = {"Room Code", "Room Title", "Host", "Topic", "Difficulty", "Questions", "Duration", "Players", "Status"};
+        String[] cols = {"Mã Phòng", "Tên Phòng Thi", "Chủ Phòng", "Chủ Đề", "Độ Khó", "Số Câu", "Thời Gian", "Thí Sinh", "Trạng Thái"};
         tableModel = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -113,17 +114,17 @@ public class RoomLobbyListScreen extends JPanel {
                 String status = value != null ? value.toString() : "";
                 Color bg;
                 Color fg = Color.WHITE;
-                String display = status;
+                String display;
 
                 if (RoomStatus.NOT_STARTED.equalsIgnoreCase(status)) {
                     bg = Theme.SUCCESS;
-                    display = "WAITING";
+                    display = "CHỜ BẮT ĐẦU";
                 } else if (RoomStatus.ONGOING.equalsIgnoreCase(status)) {
                     bg = Theme.WARNING;
-                    display = "ONGOING";
+                    display = "ĐANG THI";
                 } else {
                     bg = Theme.TEXT_MUTED;
-                    display = "FINISHED";
+                    display = "ĐÃ KẾT THÚC";
                 }
 
                 return Theme.createBadge(display, bg, fg);
@@ -133,6 +134,7 @@ public class RoomLobbyListScreen extends JPanel {
         JScrollPane scrollPane = new JScrollPane(tblRooms);
         scrollPane.getViewport().setBackground(Theme.BG_SURFACE);
         scrollPane.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 1));
+        Theme.styleScrollPane(scrollPane);
         tableCard.add(scrollPane, BorderLayout.CENTER);
 
         add(tableCard, BorderLayout.CENTER);
@@ -141,18 +143,18 @@ public class RoomLobbyListScreen extends JPanel {
         JPanel pnlBottom = new JPanel(new BorderLayout());
         pnlBottom.setOpaque(false);
 
-        lblStatus = new JLabel("Click Refresh to load active rooms");
+        lblStatus = new JLabel("Bấm 'Làm Mới' để cập nhật danh sách phòng thi");
         lblStatus.setFont(Theme.FONT_SMALL);
         lblStatus.setForeground(Theme.TEXT_SECONDARY);
 
         JPanel pnlRoomActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         pnlRoomActions.setOpaque(false);
 
-        btnViewResults = new ModernButton("View Room Results", ModernButton.Style.OUTLINE);
-        btnViewResults.setPreferredSize(new Dimension(160, 38));
+        btnViewResults = new ModernButton("Xem Bảng Điểm Phòng", ModernButton.Style.OUTLINE);
+        btnViewResults.setPreferredSize(new Dimension(170, 38));
         btnViewResults.addActionListener(e -> viewSelectedRoomResults());
 
-        btnJoin = new ModernButton("Join Test Room", ModernButton.Style.SUCCESS);
+        btnJoin = new ModernButton("Vào Phòng Thi", ModernButton.Style.SUCCESS);
         btnJoin.setPreferredSize(new Dimension(150, 38));
         btnJoin.addActionListener(e -> joinSelectedRoom());
 
@@ -165,7 +167,7 @@ public class RoomLobbyListScreen extends JPanel {
     }
 
     public void loadRooms() {
-        lblStatus.setText("Loading rooms...");
+        lblStatus.setText("Đang tải danh sách phòng thi từ máy chủ...");
         btnRefresh.setEnabled(false);
 
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -191,7 +193,7 @@ public class RoomLobbyListScreen extends JPanel {
                 btnRefresh.setEnabled(true);
                 if (error != null) {
                     lblStatus.setForeground(Theme.DANGER);
-                    lblStatus.setText("Failed to load rooms: " + error.getMessage());
+                    lblStatus.setText("Lỗi tải danh sách phòng: " + error.getMessage());
                     return;
                 }
 
@@ -205,16 +207,16 @@ public class RoomLobbyListScreen extends JPanel {
                                 r.getHostUsername(),
                                 r.getTopic(),
                                 r.getDifficulty(),
-                                r.getQuestionCount() + " Qs",
-                                r.getDurationMinutes() + " mins",
+                                r.getQuestionCount() + " câu",
+                                r.getDurationMinutes() + " phút",
                                 r.getCurrentParticipants() + " / " + r.getMaxParticipants(),
                                 r.getStatus()
                         });
                     }
                     lblStatus.setForeground(Theme.TEXT_SECONDARY);
-                    lblStatus.setText(String.format("Found %d rooms. Select a row to Join or View Results.", currentRooms.size()));
+                    lblStatus.setText(String.format("Tìm thấy %d phòng thi. Chọn phòng để 'Vào Phòng Thi' hoặc 'Xem Bảng Điểm'.", currentRooms.size()));
                 } else {
-                    lblStatus.setText("No active rooms found.");
+                    lblStatus.setText("Hiện không có phòng thi nào đang hoạt động.");
                 }
             }
         };
@@ -222,9 +224,9 @@ public class RoomLobbyListScreen extends JPanel {
     }
 
     private void showCreateRoomDialog() {
-        JDialog dialog = new JDialog(app, "Create New Test Room", true);
+        JDialog dialog = new JDialog(app, "Tạo Phòng Thi Mới - HUST", true);
         dialog.setLayout(new BorderLayout());
-        dialog.setSize(480, 520);
+        dialog.setSize(500, 550);
         dialog.setLocationRelativeTo(app);
         dialog.getContentPane().setBackground(Theme.BG_DARK);
 
@@ -240,19 +242,19 @@ public class RoomLobbyListScreen extends JPanel {
         gbc.weightx = 1.0;
 
         // Title
-        JLabel lblT = new JLabel("Room Title / Tên phòng thi:");
+        JLabel lblT = new JLabel("Tên phòng thi:");
         lblT.setFont(Theme.FONT_BODY_BOLD);
         lblT.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblT, gbc);
 
         gbc.gridy++;
-        ModernTextField txtTitle = new ModernTextField("Midterm Exam 2026");
-        txtTitle.setText("Networking Quiz Room");
+        ModernTextField txtTitle = new ModernTextField("VD: Thi Giữa Kỳ Mạng Máy Tính");
+        txtTitle.setText("Thi Thử Đánh Giá Năng Lực HUST");
         pnl.add(txtTitle, gbc);
 
         // Topic
         gbc.gridy++;
-        JLabel lblTopic = new JLabel("Topic / Chủ đề:");
+        JLabel lblTopic = new JLabel("Chủ đề học phần:");
         lblTopic.setFont(Theme.FONT_BODY_BOLD);
         lblTopic.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblTopic, gbc);
@@ -260,11 +262,13 @@ public class RoomLobbyListScreen extends JPanel {
         gbc.gridy++;
         JComboBox<String> cmbTopic = new JComboBox<>(QuestionCategory.ALL_CATEGORIES);
         cmbTopic.setFont(Theme.FONT_BODY);
+        cmbTopic.setBackground(Theme.BG_INPUT);
+        cmbTopic.setForeground(Theme.TEXT_PRIMARY);
         pnl.add(cmbTopic, gbc);
 
         // Difficulty
         gbc.gridy++;
-        JLabel lblDiff = new JLabel("Difficulty / Độ khó:");
+        JLabel lblDiff = new JLabel("Độ khó đề thi:");
         lblDiff.setFont(Theme.FONT_BODY_BOLD);
         lblDiff.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblDiff, gbc);
@@ -273,6 +277,9 @@ public class RoomLobbyListScreen extends JPanel {
         JComboBox<String> cmbDiff = new JComboBox<>(new String[]{
                 QuestionDifficulty.ALL, QuestionDifficulty.EASY, QuestionDifficulty.MEDIUM, QuestionDifficulty.HARD
         });
+        cmbDiff.setFont(Theme.FONT_BODY);
+        cmbDiff.setBackground(Theme.BG_INPUT);
+        cmbDiff.setForeground(Theme.TEXT_PRIMARY);
         pnl.add(cmbDiff, gbc);
 
         // Questions & Duration
@@ -282,14 +289,22 @@ public class RoomLobbyListScreen extends JPanel {
 
         JPanel pnlQ = new JPanel(new BorderLayout(0, 4));
         pnlQ.setOpaque(false);
-        pnlQ.add(new JLabel("Questions:"), BorderLayout.NORTH);
+        JLabel lblQ = new JLabel("Số câu hỏi:");
+        lblQ.setFont(Theme.FONT_BODY_BOLD);
+        lblQ.setForeground(Theme.TEXT_SECONDARY);
+        pnlQ.add(lblQ, BorderLayout.NORTH);
         JSpinner spnQ = new JSpinner(new SpinnerNumberModel(5, 1, 50, 1));
+        spnQ.setFont(Theme.FONT_BODY_BOLD);
         pnlQ.add(spnQ, BorderLayout.CENTER);
 
         JPanel pnlD = new JPanel(new BorderLayout(0, 4));
         pnlD.setOpaque(false);
-        pnlD.add(new JLabel("Duration (mins):"), BorderLayout.NORTH);
+        JLabel lblD = new JLabel("Thời gian (phút):");
+        lblD.setFont(Theme.FONT_BODY_BOLD);
+        lblD.setForeground(Theme.TEXT_SECONDARY);
+        pnlD.add(lblD, BorderLayout.NORTH);
         JSpinner spnD = new JSpinner(new SpinnerNumberModel(5, 1, 120, 1));
+        spnD.setFont(Theme.FONT_BODY_BOLD);
         pnlD.add(spnD, BorderLayout.CENTER);
 
         pnlNums.add(pnlQ);
@@ -298,13 +313,13 @@ public class RoomLobbyListScreen extends JPanel {
 
         // Optional Password
         gbc.gridy++;
-        JLabel lblPass = new JLabel("Room Password (Optional / Bỏ trống nếu không khóa):");
+        JLabel lblPass = new JLabel("Mật khẩu phòng (Để trống nếu không khóa):");
         lblPass.setFont(Theme.FONT_BODY_BOLD);
         lblPass.setForeground(Theme.TEXT_SECONDARY);
         pnl.add(lblPass, gbc);
 
         gbc.gridy++;
-        ModernTextField.PasswordField txtPass = new ModernTextField.PasswordField("Optional password");
+        ModernTextField.PasswordField txtPass = new ModernTextField.PasswordField("Mật khẩu tùy chọn");
         pnl.add(txtPass, gbc);
 
         dialog.add(pnl, BorderLayout.CENTER);
@@ -313,15 +328,15 @@ public class RoomLobbyListScreen extends JPanel {
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 14));
         pnlBtn.setOpaque(false);
 
-        ModernButton btnCancel = new ModernButton("Cancel", ModernButton.Style.OUTLINE);
+        ModernButton btnCancel = new ModernButton("Hủy", ModernButton.Style.OUTLINE);
         btnCancel.addActionListener(e -> dialog.dispose());
 
-        ModernButton btnSubmit = new ModernButton("Create & Enter Lobby", ModernButton.Style.PRIMARY);
-        btnSubmit.setPreferredSize(new Dimension(170, 38));
+        ModernButton btnSubmit = new ModernButton("Tạo & Vào Phòng Chờ", ModernButton.Style.HUST);
+        btnSubmit.setPreferredSize(new Dimension(190, 38));
         btnSubmit.addActionListener(e -> {
             String title = txtTitle.getText().trim();
             if (title.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "Please enter room title!");
+                JOptionPane.showMessageDialog(dialog, "Vui lòng nhập tên phòng thi!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             String topic = (String) cmbTopic.getSelectedItem();
@@ -346,7 +361,7 @@ public class RoomLobbyListScreen extends JPanel {
                         if (r != null && r.isSuccess()) {
                             res = r.getPayloadAs(CreateRoomResponse.class);
                         } else {
-                            throw new Exception(r != null ? r.getPayloadAsString() : "Creation failed");
+                            throw new Exception(r != null ? r.getPayloadAsString() : "Tạo phòng thất bại");
                         }
                     } catch (Exception ex) {
                         this.err = ex;
@@ -358,7 +373,7 @@ public class RoomLobbyListScreen extends JPanel {
                 protected void done() {
                     btnSubmit.setEnabled(true);
                     if (err != null) {
-                        JOptionPane.showMessageDialog(dialog, "Error: " + err.getMessage(), "Create Failed", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(dialog, "Lỗi tạo phòng: " + err.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     if (res != null && res.isSuccess()) {
@@ -381,22 +396,22 @@ public class RoomLobbyListScreen extends JPanel {
     private void joinSelectedRoom() {
         int selRow = tblRooms.getSelectedRow();
         if (selRow < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a room to join!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một phòng thi trong danh sách để tham gia!", "Chưa chọn phòng", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         RoomInfoDTO room = currentRooms.get(selRow);
         if (!RoomStatus.isJoinable(room.getStatus())) {
             JOptionPane.showMessageDialog(this,
-                    "Cannot join room: The exam is already " + room.getStatus() + "!\n" +
-                            "Only rooms in 'NOT_STARTED' state can be joined.",
-                    "Cannot Join Room", JOptionPane.WARNING_MESSAGE);
+                    "Không thể tham gia: Phòng thi đang ở trạng thái '" + room.getStatus() + "'!\n" +
+                            "Chỉ các phòng có trạng thái 'NOT_STARTED' mới được phép tham gia.",
+                    "Không thể vào phòng", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         String password = null;
         if (room.isHasPassword()) {
-            password = JOptionPane.showInputDialog(this, "This room is password protected. Enter password:");
+            password = JOptionPane.showInputDialog(this, "Phòng này có đặt mật khẩu bảo vệ. Vui lòng nhập mật khẩu:", "Yêu cầu mật khẩu", JOptionPane.QUESTION_MESSAGE);
             if (password == null) return;
         }
 
@@ -416,7 +431,7 @@ public class RoomLobbyListScreen extends JPanel {
                     if (r != null && r.isSuccess()) {
                         res = r.getPayloadAs(JoinRoomResponse.class);
                     } else {
-                        throw new Exception(r != null ? r.getPayloadAsString() : "Join failed");
+                        throw new Exception(r != null ? r.getPayloadAsString() : "Không thể tham gia phòng");
                     }
                 } catch (Exception ex) {
                     this.err = ex;
@@ -429,7 +444,7 @@ public class RoomLobbyListScreen extends JPanel {
                 btnJoin.setEnabled(true);
                 if (err != null) {
                     JOptionPane.showMessageDialog(RoomLobbyListScreen.this,
-                            "Failed to join room: " + err.getMessage(), "Join Failed", JOptionPane.ERROR_MESSAGE);
+                            "Lỗi khi vào phòng: " + err.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 if (res != null && res.isSuccess()) {
@@ -444,16 +459,16 @@ public class RoomLobbyListScreen extends JPanel {
     private void viewSelectedRoomResults() {
         int selRow = tblRooms.getSelectedRow();
         if (selRow < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a completed room to view results!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một phòng thi đã kết thúc để xem kết quả!", "Chưa chọn phòng", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         RoomInfoDTO room = currentRooms.get(selRow);
         if (!RoomStatus.FINISHED.equalsIgnoreCase(room.getStatus())) {
             JOptionPane.showMessageDialog(this,
-                    "Results are only available for rooms that have FINISHED!\n" +
-                            "Current room status is: " + room.getStatus(),
-                    "Room Not Finished", JOptionPane.INFORMATION_MESSAGE);
+                    "Bảng điểm chỉ khả dụng cho các phòng đã KẾT THÚC (FINISHED)!\n" +
+                            "Trạng thái phòng hiện tại là: " + room.getStatus(),
+                    "Phòng chưa kết thúc", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
@@ -481,7 +496,7 @@ public class RoomLobbyListScreen extends JPanel {
                 btnViewResults.setEnabled(true);
                 if (err != null || results == null || results.isEmpty()) {
                     JOptionPane.showMessageDialog(RoomLobbyListScreen.this,
-                            "No recorded results found for room " + room.getRoomCode());
+                            "Không tìm thấy dữ liệu kết quả của phòng " + room.getRoomCode(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 showCompletedRoomDialog(room, results);
@@ -491,8 +506,8 @@ public class RoomLobbyListScreen extends JPanel {
     }
 
     private void showCompletedRoomDialog(RoomInfoDTO room, List<UserExamRecordDTO> results) {
-        JDialog dialog = new JDialog(app, "Exam Results - Room " + room.getRoomCode(), true);
-        dialog.setSize(620, 450);
+        JDialog dialog = new JDialog(app, "Kết Quả Phòng Thi - " + room.getRoomCode(), true);
+        dialog.setSize(680, 480);
         dialog.setLocationRelativeTo(app);
         dialog.getContentPane().setBackground(Theme.BG_DARK);
         dialog.setLayout(new BorderLayout(0, 12));
@@ -501,11 +516,11 @@ public class RoomLobbyListScreen extends JPanel {
         pnlTop.setOpaque(false);
         pnlTop.setBorder(new EmptyBorder(16, 20, 0, 20));
 
-        JLabel lblTitle = new JLabel("COMPLETED ROOM RESULTS: " + room.getTitle());
+        JLabel lblTitle = new JLabel("KẾT QUẢ BÀI THI: " + room.getTitle());
         lblTitle.setFont(Theme.FONT_SUBTITLE);
         lblTitle.setForeground(Theme.TEXT_PRIMARY);
 
-        JLabel lblSub = new JLabel(String.format("Room Code: %s | Topic: %s | Questions: %d",
+        JLabel lblSub = new JLabel(String.format("Mã phòng: %s | Chủ đề: %s | Số câu hỏi: %d",
                 room.getRoomCode(), room.getTopic(), room.getQuestionCount()));
         lblSub.setFont(Theme.FONT_SMALL);
         lblSub.setForeground(Theme.TEXT_SECONDARY);
@@ -514,8 +529,11 @@ public class RoomLobbyListScreen extends JPanel {
         pnlTop.add(lblSub);
         dialog.add(pnlTop, BorderLayout.NORTH);
 
-        String[] cols = {"Rank", "Student Username", "Score (/10.0)", "Correct Answers", "Total Questions"};
-        DefaultTableModel model = new DefaultTableModel(cols, 0);
+        String[] cols = {"Hạng", "Tài Khoản Thí Sinh", "Điểm Số (/10.0)", "Số Câu Đúng", "Tổng Số Câu"};
+        DefaultTableModel model = new DefaultTableModel(cols, 0) {
+            @Override
+            public boolean isCellEditable(int row, int col) { return false; }
+        };
         int rank = 1;
         for (UserExamRecordDTO rec : results) {
             model.addRow(new Object[]{
@@ -532,11 +550,13 @@ public class RoomLobbyListScreen extends JPanel {
         JScrollPane scroll = new JScrollPane(table);
         scroll.getViewport().setBackground(Theme.BG_SURFACE);
         scroll.setBorder(new EmptyBorder(0, 20, 0, 20));
+        Theme.styleScrollPane(scroll);
         dialog.add(scroll, BorderLayout.CENTER);
 
         JPanel pnlClose = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 12));
         pnlClose.setOpaque(false);
-        ModernButton btnClose = new ModernButton("Close", ModernButton.Style.PRIMARY);
+        ModernButton btnClose = new ModernButton("Đóng", ModernButton.Style.HUST);
+        btnClose.setPreferredSize(new Dimension(120, 36));
         btnClose.addActionListener(e -> dialog.dispose());
         pnlClose.add(btnClose);
         dialog.add(pnlClose, BorderLayout.SOUTH);

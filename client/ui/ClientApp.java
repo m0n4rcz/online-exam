@@ -44,7 +44,7 @@ public class ClientApp extends JFrame {
     }
 
     private void initWindow() {
-        setTitle("Online Examination System - PTIT Computer Network");
+        setTitle("HUST Online Examination System - Đại học Bách Khoa Hà Nội");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1150, 780);
         setMinimumSize(new Dimension(950, 680));

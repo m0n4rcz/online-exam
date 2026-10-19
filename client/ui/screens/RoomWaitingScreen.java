@@ -24,6 +24,7 @@ import java.util.List;
  * Multiplayer Room Waiting Lobby before the host begins the exam.
  * Features real-time participant roster updates, ready toggle, in-room chat,
  * and host-controlled exam initiation.
+ * Styled for HUST academic examination environment.
  */
 public class RoomWaitingScreen extends JPanel implements ServerEventListener {
 
@@ -66,16 +67,16 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
     private void initUI() {
         // Top Header
         ModernCard topCard = new ModernCard(new BorderLayout(16, 0));
-        topCard.setBorder(new EmptyBorder(14, 18, 14, 18));
+        topCard.setBorder(new EmptyBorder(14, 20, 14, 20));
 
         JPanel pnlTitle = new JPanel(new GridLayout(2, 1, 0, 4));
         pnlTitle.setOpaque(false);
 
-        lblRoomTitle = new JLabel("ROOM LOBBY: LOADING...");
+        lblRoomTitle = new JLabel("PHÒNG THI ĐANG TẢI...");
         lblRoomTitle.setFont(Theme.FONT_TITLE);
         lblRoomTitle.setForeground(Theme.TEXT_PRIMARY);
 
-        lblRoomMeta = new JLabel("Connecting to room lobby...");
+        lblRoomMeta = new JLabel("Đang kết nối tới phòng thi trực tuyến...");
         lblRoomMeta.setFont(Theme.FONT_SMALL);
         lblRoomMeta.setForeground(Theme.TEXT_SECONDARY);
 
@@ -96,12 +97,14 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
 
         // Left: Participant List
         ModernCard pnlLeft = new ModernCard(new BorderLayout(0, 10));
-        JLabel lblPartTitle = new JLabel("PARTICIPANTS IN ROOM");
+        pnlLeft.setBorder(new EmptyBorder(14, 16, 14, 16));
+
+        JLabel lblPartTitle = new JLabel("DANH SÁCH THÍ SINH TRONG PHÒNG");
         lblPartTitle.setFont(Theme.FONT_SUBTITLE);
         lblPartTitle.setForeground(Theme.TEXT_PRIMARY);
         pnlLeft.add(lblPartTitle, BorderLayout.NORTH);
 
-        String[] cols = {"Username", "Display Name", "Role", "Status"};
+        String[] cols = {"Tài khoản", "Họ và tên", "Vai trò", "Trạng thái"};
         participantModel = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -117,21 +120,25 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
                 String val = value != null ? value.toString() : "";
-                boolean ready = "READY".equalsIgnoreCase(val);
+                boolean ready = "SẴN SÀNG".equalsIgnoreCase(val) || "READY".equalsIgnoreCase(val);
                 Color bg = ready ? Theme.SUCCESS : Theme.BORDER;
                 Color fg = ready ? Color.WHITE : Theme.TEXT_MUTED;
-                return Theme.createBadge(val, bg, fg);
+                String display = ready ? "SẴN SÀNG" : "CHƯA SẴN SÀNG";
+                return Theme.createBadge(display, bg, fg);
             }
         });
 
         JScrollPane scrollPart = new JScrollPane(tblParticipants);
         scrollPart.getViewport().setBackground(Theme.BG_SURFACE);
         scrollPart.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 1));
+        Theme.styleScrollPane(scrollPart);
         pnlLeft.add(scrollPart, BorderLayout.CENTER);
 
         // Right: In-Room Chat
         ModernCard pnlRight = new ModernCard(new BorderLayout(0, 10));
-        JLabel lblChatTitle = new JLabel("ROOM LIVE CHAT");
+        pnlRight.setBorder(new EmptyBorder(14, 16, 14, 16));
+
+        JLabel lblChatTitle = new JLabel("KÊNH TRAO ĐỔI NỘI BỘ PHÒNG THI");
         lblChatTitle.setFont(Theme.FONT_SUBTITLE);
         lblChatTitle.setForeground(Theme.TEXT_PRIMARY);
         pnlRight.add(lblChatTitle, BorderLayout.NORTH);
@@ -148,15 +155,16 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
         JScrollPane scrollChat = new JScrollPane(txtChatArea);
         scrollChat.getViewport().setBackground(Theme.BG_SURFACE);
         scrollChat.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 1));
+        Theme.styleScrollPane(scrollChat);
         pnlRight.add(scrollChat, BorderLayout.CENTER);
 
         JPanel pnlChatInput = new JPanel(new BorderLayout(8, 0));
         pnlChatInput.setOpaque(false);
-        txtChatInput = new ModernTextField("Type a message to the room...");
+        txtChatInput = new ModernTextField("Nhập tin nhắn gửi tới các thí sinh trong phòng...");
         txtChatInput.addActionListener(e -> sendChatMessage());
 
-        btnSendChat = new ModernButton("Send", ModernButton.Style.SECONDARY);
-        btnSendChat.setPreferredSize(new Dimension(80, 36));
+        btnSendChat = new ModernButton("Gửi", ModernButton.Style.SECONDARY);
+        btnSendChat.setPreferredSize(new Dimension(80, 38));
         btnSendChat.addActionListener(e -> sendChatMessage());
 
         pnlChatInput.add(txtChatInput, BorderLayout.CENTER);
@@ -171,19 +179,19 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
         JPanel pnlBottom = new JPanel(new BorderLayout());
         pnlBottom.setOpaque(false);
 
-        btnLeaveRoom = new ModernButton("Leave Room", ModernButton.Style.DANGER);
+        btnLeaveRoom = new ModernButton("Rời Phòng", ModernButton.Style.DANGER);
         btnLeaveRoom.setPreferredSize(new Dimension(140, 42));
         btnLeaveRoom.addActionListener(e -> leaveRoom());
 
         JPanel pnlRightActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         pnlRightActions.setOpaque(false);
 
-        btnToggleReady = new ModernButton("Toggle Ready", ModernButton.Style.OUTLINE);
-        btnToggleReady.setPreferredSize(new Dimension(160, 42));
+        btnToggleReady = new ModernButton("Tôi Đã Sẵn Sàng", ModernButton.Style.OUTLINE);
+        btnToggleReady.setPreferredSize(new Dimension(180, 42));
         btnToggleReady.addActionListener(e -> toggleReady());
 
-        btnStartExam = new ModernButton("Start Exam Now (Host)", ModernButton.Style.PRIMARY);
-        btnStartExam.setPreferredSize(new Dimension(200, 42));
+        btnStartExam = new ModernButton("Bắt Đầu Bài Thi (Chủ Phòng)", ModernButton.Style.HUST);
+        btnStartExam.setPreferredSize(new Dimension(230, 42));
         btnStartExam.addActionListener(e -> startExam());
 
         pnlRightActions.add(btnToggleReady);
@@ -201,13 +209,13 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
         this.isReady = false;
 
         lblCountdown.setText("");
-        lblRoomTitle.setText(String.format("ROOM %s: %s", roomCode, info != null ? info.getTitle() : "Online Test"));
+        lblRoomTitle.setText(String.format("PHÒNG THI #%s: %s", roomCode, info != null ? info.getTitle() : "Đề Thi Trực Tuyến HUST"));
         if (info != null) {
-            lblRoomMeta.setText(String.format("Host: %s | Topic: %s | Difficulty: %s | Questions: %d | Duration: %d mins",
+            lblRoomMeta.setText(String.format("Chủ phòng: %s | Chủ đề: %s | Độ khó: %s | Số câu: %d | Thời gian: %d phút",
                     info.getHostUsername(), info.getTopic(), info.getDifficulty(), info.getQuestionCount(), info.getDurationMinutes()));
         }
 
-        txtChatArea.setText("--- Welcome to Room " + roomCode + "! Chat with other players here ---\n");
+        txtChatArea.setText("--- Chào mừng các thí sinh đã vào Phòng " + roomCode + "! Hãy sẵn sàng trước khi bài thi bắt đầu ---\n");
 
         // Visibility based on host status
         btnStartExam.setVisible(isHost);
@@ -219,8 +227,8 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
         // Load participants initial snapshot
         participantModel.setRowCount(0);
         String myUser = client.getCurrentUser() != null ? client.getCurrentUser().getUsername() : "me";
-        String myName = client.getCurrentUser() != null ? client.getCurrentUser().getDisplayName() : "Me";
-        participantModel.addRow(new Object[]{myUser, myName, isHost ? "HOST" : "STUDENT", isHost ? "READY" : "NOT READY"});
+        String myName = client.getCurrentUser() != null ? client.getCurrentUser().getDisplayName() : "Thí sinh";
+        participantModel.addRow(new Object[]{myUser, myName, isHost ? "CHỦ PHÒNG" : "THÍ SINH", isHost ? "SẴN SÀNG" : "CHƯA SẴN SÀNG"});
     }
 
     private void toggleReady() {
@@ -240,7 +248,12 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
                 btnToggleReady.setEnabled(true);
                 if (res != null && res.isSuccess()) {
                     isReady = !isReady;
-                    btnToggleReady.setText(isReady ? "Cancel Ready (Hủy sẵn sàng)" : "I'm Ready! (Sẵn sàng)");
+                    btnToggleReady.setText(isReady ? "Hủy Sẵn Sàng" : "Tôi Đã Sẵn Sàng");
+                    if (isReady) {
+                        btnToggleReady.setStyle(ModernButton.Style.SUCCESS);
+                    } else {
+                        btnToggleReady.setStyle(ModernButton.Style.OUTLINE);
+                    }
                 }
             }
         };
@@ -269,7 +282,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
                 if (err != null) {
                     btnStartExam.setEnabled(true);
                     JOptionPane.showMessageDialog(RoomWaitingScreen.this,
-                            "Failed to start exam: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                            "Lỗi bắt đầu bài thi: " + err.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
         };
@@ -289,7 +302,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
 
         ChatMessageDTO chat = new ChatMessageDTO(roomCode,
                 client.getCurrentUser() != null ? client.getCurrentUser().getUsername() : "me",
-                client.getCurrentUser() != null ? client.getCurrentUser().getDisplayName() : "Me",
+                client.getCurrentUser() != null ? client.getCurrentUser().getDisplayName() : "Thí sinh",
                 msg);
 
         // Display locally immediately
@@ -314,7 +327,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
     public void onRoomUpdate(RoomUpdateEventDTO event) {
         if (event == null) return;
         if (event.getMessage() != null && !event.getMessage().isEmpty()) {
-            appendChat("SYSTEM", event.getMessage());
+            appendChat("HỆ THỐNG", event.getMessage());
         }
 
         List<RoomParticipantDTO> participants = event.getParticipants();
@@ -324,8 +337,8 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
                 participantModel.addRow(new Object[]{
                         p.getUsername(),
                         p.getDisplayName(),
-                        p.isHost() ? "HOST" : "STUDENT",
-                        p.isReady() ? "READY" : "NOT READY"
+                        p.isHost() ? "CHỦ PHÒNG" : "THÍ SINH",
+                        p.isReady() ? "SẴN SÀNG" : "CHƯA SẴN SÀNG"
                 });
             }
         }
@@ -333,7 +346,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
 
     @Override
     public void onRoomStart(int countdownSeconds) {
-        lblCountdown.setText("Exam starting in " + countdownSeconds + "s...");
+        lblCountdown.setText("Bài thi bắt đầu sau " + countdownSeconds + " giây...");
     }
 
     @Override
@@ -351,7 +364,7 @@ public class RoomWaitingScreen extends JPanel implements ServerEventListener {
 
     @Override
     public void onConnectionLost(String reason) {
-        JOptionPane.showMessageDialog(this, "Connection lost: " + reason);
+        JOptionPane.showMessageDialog(this, "Mất kết nối với máy chủ: " + reason, "Mất kết nối", JOptionPane.WARNING_MESSAGE);
         app.showScreen("LOGIN");
     }
 }
